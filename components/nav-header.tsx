@@ -1,9 +1,12 @@
+"use client"
+import React from "react"
+import { useWeb3AuthContext } from "../context/Web3AuthContext"
 import ConnectWallet from "./wallet/connect-wallet"
-import { SwitchNetwork } from "./wallet/switch-network"
 
 const NavHeader = () => {
-
-	const isAdmin = process.env.NEXT_PUB
+	const { provider, address } = useWeb3AuthContext()
+	const isAdmin =
+		address !== null && process.env.NEXT_PUBLIC_ADMIN_ADDRESS === address
 
 	return (
 		<header className="flex items-center h-16 bg-white-800 text-black px-4  border-b-4 border-green-500 sticky top-0 z-50 bg-white">
@@ -23,16 +26,18 @@ const NavHeader = () => {
 				<a href="/contest" className="text-green-500 hover:underline mx-4">
 					Participate
 				</a>
-				{}
-				{/* |
-				<a href="/about" className="text-green-500 hover:underline mx-4">
-					About
-				</a> */}
-				{/* align right */}
+				{isAdmin && (
+					<span>
+						|
+						<a href="/admin" className="text-green-500 hover:underline mx-4">
+							Admin
+						</a>
+					</span>
+				)}
 			</nav>
-			<span className="ml-auto align-right justify-end">
+			{/* <span className="ml-auto align-right justify-end">
 				<SwitchNetwork />
-			</span>
+			</span> */}
 			<span className="align-right justify-end">
 				<ConnectWallet />
 			</span>

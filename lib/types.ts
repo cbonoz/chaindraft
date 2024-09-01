@@ -102,3 +102,26 @@ export interface Player {
     uniform_number: number
     draft_round: string
 }
+
+//  {
+// 	chainNamespace: CHAIN_NAMESPACES.EIP155,
+// 	chainId: "0x7a31c7",
+// 	rpcTarget: "https://api.helium.fhenix.zone",
+// 	displayName: "Fhenix Helium",
+// 	blockExplorerUrl: "https://explorer.helium.fhenix.zone",
+// 	ticker: "tFHE",
+// 	tickerName: "tFHE",
+// 	logo: "https://img.cryptorank.io/coins/fhenix1695737384486.png",
+// }
+
+
+export interface ChainConfig {
+    chainNamespace: string
+    chainId: string
+    rpcTarget: string
+    displayName: string
+    blockExplorerUrl: string
+    ticker: string
+    tickerName: string
+    logo: string
+}

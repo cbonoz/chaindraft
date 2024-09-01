@@ -10,7 +10,7 @@ export const RouteButtons = () => {
 		<div className="flex space-x-4">
 			<Button
 				className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
-				onClick={() => router.push("/draft")}
+				onClick={() => router.push("/create")}
 			>
 				Draft
 			</Button>

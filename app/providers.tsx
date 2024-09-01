@@ -1,24 +1,20 @@
-'use client'
+"use client"
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { ReactNode } from 'react'
-import { type State, WagmiProvider } from 'wagmi'
-
-import { config } from './config'
+import { Web3AuthProvider } from "@/context/Web3AuthContext"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import type { ReactNode } from "react"
 
 type Props = {
-    children: ReactNode
-    initialState: State | undefined
+	children: ReactNode
+	initialState: {}
 }
 
 const queryClient = new QueryClient()
 
 export function Providers({ children, initialState }: Props) {
-    return (
-        <WagmiProvider config={config} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
-        </WagmiProvider>
-    )
+	return (
+		<Web3AuthProvider>
+			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+		</Web3AuthProvider>
+	)
 }

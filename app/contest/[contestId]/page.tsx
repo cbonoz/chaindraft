@@ -1,6 +1,5 @@
 "use client"
 
-import { config } from "@/app/config"
 import BasicCard from "@/components/basic-card"
 import RenderObject from "@/components/render-object"
 import { Button } from "@/components/ui/button"
@@ -25,15 +24,10 @@ import { Address, Chain, createPublicClient, http } from "viem"
 import { writeContract } from "@wagmi/core"
 import crypto from "crypto"
 
-import {
-	useAccount,
-	useChainId,
-	useChains,
-	useSwitchChain,
-	useWriteContract,
-} from "wagmi"
+import { useAccount, useChainId, useChains, useWriteContract } from "wagmi"
 import { createAttestation, getAttestation } from "@/lib/ethsign"
 import PlayerDraft from "@/components/player-draft"
+import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 
 const RESULT_KEYS = [
 	"name",
@@ -49,41 +43,38 @@ interface Params {
 	contestId: Address
 }
 
-export default function FundRequest({ params }: { params: Params }) {
+export default function ContestPage({ params }: { params: Params }) {
 	const [loading, setLoading] = useState(true)
 	const [signLoading, setSignLoading] = useState(false)
 	const [data, setData] = useState<ContractMetadata | undefined>()
 	const [result, setResult] = useState<any>(null)
 	const [error, setError] = useState<any>(null)
 	const ref = useRef(null)
-	const { chains, switchChain } = useSwitchChain()
-	const { address } = useAccount()
-
-	const router = useRouter()
 
 	const { contestId } = params
 
-	const chainId = useChainId()
-	const currentChain: Chain | undefined = (chains || []).find(
-		(c) => c.id === chainId
-	)
-
-	const signer = useEthersSigner({ chainId })
+	const {
+		activeChain: currentChain,
+		address,
+		signer,
+		provider,
+	} = useWeb3AuthContext()
 
 	async function fetchData() {
 		setLoading(true)
 		try {
-			const publicClient = createPublicClient({
-				chain: currentChain,
-				transport: http(),
-			})
-			let contractData: ContractMetadata = transformMetadata(
-				(await publicClient.readContract({
-					abi: APP_CONTRACT.abi,
-					address: contestId,
-					functionName: "getMetadata",
-				})) as ContractMetadata
-			)
+			// const publicClient = createPublicClient({
+			// 	chain: currentChain,
+			// 	transport: http(),
+			// })
+			// let contractData: ContractMetadata = transformMetadata(
+			// 	(await publicClient.readContract({
+			// 		abi: APP_CONTRACT.abi,
+			// 		address: contestId,
+			// 		functionName: "getMetadata",
+			// 	})) as ContractMetadata
+			// )
+			let contractData: any = {}
 			// convert balance and validatedAt to number from bigint
 			console.log("contractData", contractData)
 			setData(contractData)
@@ -140,14 +131,14 @@ export default function FundRequest({ params }: { params: Params }) {
 			const attestation = await createAttestation(signer, schemaEntry)
 			// const attestation = { attestationId: '1234' }
 			// await switchChain({ chainId })
-
+			let res = {}
 			console.log("created attestation", attestation)
-			const res = await writeContract(config, {
-				abi: APP_CONTRACT.abi,
-				address: contestId,
-				functionName: "validate",
-				args: [attestation.attestationId],
-			})
+			// const res = await writeContract(config, {
+			// 	abi: APP_CONTRACT.abi,
+			// 	address: contestId,
+			// 	functionName: "validate",
+			// 	args: [attestation.attestationId],
+			// })
 
 			console.log("signRequest validate", res, attestation)
 			await fetchData()

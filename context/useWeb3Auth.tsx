@@ -7,27 +7,16 @@ import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base"
 import { ethers } from "ethers"
 import Error from "next/error"
 import { NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID } from "@/lib/constants"
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
+import { CHAIN_OPTIONS } from "@/lib/chains"
 
-// Define the providers you want to support (e.g., MetaMask, WalletConnect)
-const chainConfig = {
-	chainNamespace: CHAIN_NAMESPACES.EIP155,
-	chainId: "0x7a31c7",
-	rpcTarget: "https://api.helium.fhenix.zone",
-	displayName: "Fhenix Helium",
-	blockExplorerUrl: "https://explorer.helium.fhenix.zone",
-	ticker: "tFHE",
-	tickerName: "tFHE",
-	logo: "https://img.cryptorank.io/coins/fhenix1695737384486.png",
-}
-
-const privateKeyProvider = new EthereumPrivateKeyProvider({
-	config: { chainConfig: chainConfig },
-})
+import { MetamaskAdapter } from "@web3auth/metamask-adapter"
 
 const useWeb3Auth = () => {
 	const [provider, setProvider] = useState<any>(null)
 	const [signer, setSigner] = useState(null)
 	const [address, setAddress] = useState(null)
+	const [activeChain, setActiveChain] = useState(CHAIN_OPTIONS[0])
 	const [error, setError] = useState(null)
 
 	useEffect(() => {
@@ -48,16 +37,25 @@ const useWeb3Auth = () => {
 
 	const connectWallet = async () => {
 		try {
+			const privateKeyProvider = new EthereumPrivateKeyProvider({
+				config: { chainConfig: activeChain },
+			})
 			//Initialize within your constructor
 			const web3auth = new Web3Auth({
 				clientId: NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID, // Get your Client ID from Web3Auth Dashboard
 				web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
 				privateKeyProvider,
 			})
+			const metamaskAdapter = new MetamaskAdapter({
+				clientId: NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID, // Get your Client ID from Web3Auth Dashboard
+				web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+				chainConfig: activeChain as any,
+			})
+			web3auth.configureAdapter(metamaskAdapter)
 
 			await web3auth.initModal()
 			const _provider = await web3auth.connect()
-			const ethersProvider = new ethers.providers.Web3Provider(_provider)
+			const ethersProvider = new ethers.BrowserProvider(_provider as any)
 			setProvider(ethersProvider)
 		} catch (err: any) {
 			setError(err.message)
@@ -84,6 +82,8 @@ const useWeb3Auth = () => {
 		error,
 		connectWallet,
 		disconnectWallet,
+		setActiveChain,
+		activeChain,
 	}
 }
 

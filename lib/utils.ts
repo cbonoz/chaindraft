@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
 import { Config } from "wagmi"
+import { CustomChainConfig } from "@web3auth/base"
 import { ContractMetadata } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
@@ -14,7 +15,7 @@ export const getAttestationUrl = (attestationId: string) => {
 	return `https://scan.sign.global/attestation/${attestationId}`
 }
 
-export const abbreviate = (s: string | undefined, chars?: number) =>
+export const abbreviate = (s: string | undefined | null, chars?: number) =>
 	s ? `${s.substr(0, chars || 6)}**` : ""
 
 export const assertTrue = (condition: boolean, message: string) => {
@@ -40,7 +41,7 @@ export const formatCurrency = (amount: number, chain?: Chain) => {
 
 export const getExplorerUrl = (
 	address?: string,
-	chain?: Chain,
+	chain?: CustomChainConfig,
 	isTx?: boolean
 ) => {
 	const prefix = isTx ? "tx" : "address"
@@ -86,6 +87,26 @@ export const isValidEmail = (email: string) => {
 
 export const getNameFromUser = (user: any) => {
 	return `${user.firstName} ${user.lastName}`
+}
+
+export const getReadableError = (err: any) => {
+	if (err?.info?.error?.message) {
+		return err.info.error.message
+	} else if (err.message) {
+		return err.message
+	} else if (err instanceof Error) {
+		return JSON.stringify(err)
+	}
+	const errorMessage =
+		(err?.info?.message ||
+			err?.info ||
+			err?.message ||
+			err ||
+			"Unknown Error") + ""
+	if (errorMessage.indexOf("network changed")) {
+		return "Network changed. Please ensure you are connected to the Theta network."
+	}
+	return errorMessage
 }
 
 export const signUrl = (address: string) =>
