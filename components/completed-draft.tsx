@@ -1,18 +1,46 @@
+"use client"
+
 import { Player } from "@/lib/types"
-import React from "react"
+import React, { useState } from "react"
 import PlayerCard from "./player-card"
 import Image from "next/image"
 import { POSITIONS } from "@/lib/constants"
+import { Button } from "./ui/button"
+import { ReloadIcon } from "@radix-ui/react-icons"
 
 interface Props {
 	draftedPlayers: Record<string, Player | null>
 	reset: () => void
+	contestId: string
 }
 
-const CompletedDraft = ({ draftedPlayers, reset }: Props) => {
+const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
+	const [loading, setLoading] = useState(false)
+	const [result, setResult] = useState<any>(null)
+
 	const players = Object.values(draftedPlayers).filter(
 		(player) => player !== null
 	)
+
+	async function onSubmit() {
+		console.log("Draft submitted", contestId, draftedPlayers)
+		try {
+			setLoading(true)
+			// await submitDraft(contestId, draftedPlayers)
+			setResult({
+				success: true,
+				message: "Draft submitted successfully!",
+			})
+		} catch (err: any) {
+			console.error(err)
+			setResult({
+				success: false,
+				message: "Error submitting draft",
+			})
+		} finally {
+			setLoading(false)
+		}
+	}
 
 	return (
 		<div className="justify-center max-w-[1200px]">
@@ -36,12 +64,23 @@ const CompletedDraft = ({ draftedPlayers, reset }: Props) => {
 				))}
 			</div>
 			<div>
-				<button
+				<Button
+					onClick={onSubmit}
+					disabled={loading}
+					className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+				>
+					{loading && <ReloadIcon className="animate-spin" />}
+					Submit Draft
+				</Button>
+			</div>
+			<div>
+				<Button
 					onClick={reset}
+					disabled={loading}
 					className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
 				>
 					Reset Draft
-				</button>
+				</Button>
 			</div>
 		</div>
 	)

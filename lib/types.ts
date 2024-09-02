@@ -31,10 +31,11 @@ export interface ContestMetadata {
 
 export interface SchemaEntry {
 	name: string
-	request: string
+	lineup: string
 	timestamp: string
 	signature: string
 }
+
 /*
 status: "ACT",
 		display_name: "A.J. Brown",

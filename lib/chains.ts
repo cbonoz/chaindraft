@@ -25,3 +25,8 @@ const CHILIZ_TESTNET: CustomChainConfig = {
 }
 
 export const CHAIN_OPTIONS = [CHILIZ_TESTNET, FHENIX_TESTNET]
+
+export const CONTRACT_ADDRESS_KAP: Record<string, string | undefined> = {
+	[CHILIZ_TESTNET.chainId]: process.env.NEXT_PUBLIC_CHILIZ_TESTNET_ADDRESS,
+	[FHENIX_TESTNET.chainId]: process.env.NEXT_PUBLIC_FHENIX_TESTNET_ADDRESS
+}

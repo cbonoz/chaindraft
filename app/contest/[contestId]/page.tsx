@@ -5,7 +5,7 @@ import RenderObject from "@/components/render-object"
 import { Button } from "@/components/ui/button"
 import { APP_CONTRACT } from "@/lib/contract/metadata"
 import { useEthersSigner } from "@/lib/get-signer"
-import { ContesttMetadata, SchemaEntry } from "@/lib/types"
+import { ContestMetadata, SchemaEntry } from "@/lib/types"
 import {
 	abbreviate,
 	formatCurrency,
@@ -25,6 +25,7 @@ import crypto from "crypto"
 import { createAttestation, getAttestation } from "@/lib/ethsign"
 import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
+import { getContestInfo } from "@/lib/contract/commands"
 
 const RESULT_KEYS = [
 	"name",
@@ -60,26 +61,20 @@ export default function ContestPage({ params }: { params: Params }) {
 	async function fetchData() {
 		setLoading(true)
 		try {
-			// const publicClient = createPublicClient({
-			// 	chain: currentChain,
-			// 	transport: http(),
-			// })
-			// let contractData: ContesttMetadata = transformMetadata(
-			// 	(await publicClient.readContract({
-			// 		abi: APP_CONTRACT.abi,
-			// 		address: contestId,
-			// 		functionName: "getMetadata",
-			// 	})) as ContesttMetadata
-			// )
-			let contractData: any = {}
+			const contractData: ContestMetadata = await getContestInfo(
+				signer,
+				currentChain?.chainId,
+				parseInt(contestId)
+			)
+
 			// convert balance and validatedAt to number from bigint
 			console.log("contractData", contractData)
 			setData(contractData)
 
-			if (contractData.attestationId) {
-				const res = await getAttestation(contractData.attestationId)
-				console.log("getAttestation", res)
-			}
+			// if (contractData.attestationId) {
+			// 	const res = await getAttestation(contractData.attestationId)
+			// 	console.log("getAttestation", res)
+			// }
 		} catch (error) {
 			console.log("error reading contract", error)
 			setError(error)
@@ -101,18 +96,12 @@ export default function ContestPage({ params }: { params: Params }) {
 		}
 
 		setSignLoading(true)
-		const d: ContesttMetadata = data
-		// generate hash of privateKey
-		signature = crypto
-			.createHash("sha256")
-			.update(d.recipientAddress)
-			.digest("hex")
-			.toString()
+		const d: ContestMetadata = data
 
 		try {
 			const schemaEntry: SchemaEntry = {
-				name: d.recipientName,
-				request: d.name,
+				name: d.name,
+				lineup: d.name,
 				timestamp: Date.now().toString(),
 				signature,
 				// signatureData,

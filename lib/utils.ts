@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
 import { CustomChainConfig } from "@web3auth/base"
 import { ethers } from "ethers"
+import { ContestMetadata } from './types'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -63,7 +64,14 @@ export const getPlaceholderDescription = () => {
 	return `This is to validate proof of funds to have your offer considered. See the attachment below, sign at your earliest convenience but this would be nice to have by ${date}.`
 }
 
-export const transformMetadata = (contractData: ContesttMetadata) => {
+export const requireValue = (value: any, errMessage: string) => {
+	if (!value) {
+		throw new Error(errMessage)
+	}
+	return value
+}
+
+export const transformMetadata = (contractData: ContestMetadata) => {
 	contractData.balance = Number(contractData.balance)
 	contractData.validatedAt = Number(contractData.validatedAt) * 1000
 	contractData.createdAt = Number(contractData.createdAt) * 1000

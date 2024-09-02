@@ -65,7 +65,7 @@ const PlayerDraft = ({contestId}: Props) => {
 		siteConfig.numberDraftPlayers
 
 	if (isTerminalState) {
-		return <CompletedDraft draftedPlayers={draftedPlayers} reset={reset} />
+		return <CompletedDraft draftedPlayers={draftedPlayers} reset={reset} contestId={contestId} />
 	}
 
 	return (
