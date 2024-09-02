@@ -1,9 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
-import { Config } from "wagmi"
 import { CustomChainConfig } from "@web3auth/base"
-import { ContractMetadata } from "./types"
+import { ethers } from "ethers"
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -45,11 +44,15 @@ export const getExplorerUrl = (
 	isTx?: boolean
 ) => {
 	const prefix = isTx ? "tx" : "address"
-	const baseUrl = chain?.blockExplorers?.default?.url
+	const baseUrl = chain?.blockExplorerUrl
 	if (!baseUrl || !address) {
 		return ""
 	}
 	return `${baseUrl}/${prefix}/${address}`
+}
+
+export const ethToWei = (amount: any) => {
+	return ethers.parseEther(amount + "")
 }
 
 export const getPlaceholderDescription = () => {
@@ -60,7 +63,7 @@ export const getPlaceholderDescription = () => {
 	return `This is to validate proof of funds to have your offer considered. See the attachment below, sign at your earliest convenience but this would be nice to have by ${date}.`
 }
 
-export const transformMetadata = (contractData: ContractMetadata) => {
+export const transformMetadata = (contractData: ContesttMetadata) => {
 	contractData.balance = Number(contractData.balance)
 	contractData.validatedAt = Number(contractData.validatedAt) * 1000
 	contractData.createdAt = Number(contractData.createdAt) * 1000

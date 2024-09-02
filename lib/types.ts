@@ -1,36 +1,39 @@
 export interface RequestData {
-    recipientName: string
-    recipientAddress: string
-    balance: number
-    name: string
-    description: string
-    files: string[]
-}
-
-export interface ContractMetadata {
-    owner: string
-    createdAt: number
-    name: string
-    description: string
-    balance: number
-    recipientName: string
-    recipientAddress: string
-    cid?: string // optional cid pointer to attachment/s
-    validatedAt: number
-    attestationId: string
-    network: string
+	entryFee?: number
+	name?: string
+	closeDateMillis?: number
+	passcode?: string
 }
 
 export interface SchemaItem {
-    name: string
-    type: string
+	name: string
+	type: string
+}
+
+// string memory name,
+// uint entryFee,
+// uint prizePool,
+// bool isActive,
+// address winner,
+// uint creationTime,
+// uint closeTime,
+// address owner
+export interface ContestMetadata {
+	name: string
+	entryFee: number
+	prizePool: number
+	isActive: boolean
+	winner: string
+	creationTime: number
+	closeTime: number
+	owner: string
 }
 
 export interface SchemaEntry {
-    name: string
-    request: string
-    timestamp: string
-    signature: string
+	name: string
+	request: string
+	timestamp: string
+	signature: string
 }
 /*
 status: "ACT",
@@ -69,38 +72,38 @@ status: "ACT",
         */
 
 export interface Player {
-    status: string
-    display_name: string
-    first_name: string
-    last_name: string
-    esb_id: string
-    gsis_id: string
-    birth_date: string
-    college_name: string
-    position_group: string
-    position: string
-    jersey_number: number
-    height: number
-    weight: number
-    years_of_experience: number
-    team_abbr: string
-    team_seq: number
-    current_team_id: number
-    football_name: string
-    entry_year: number
-    rookie_year: number
-    draft_club: string
-    draft_number: number
-    college_conference: string
-    status_description_abbr: string
-    status_short_description: string
-    gsis_it_id: number
-    short_name: string
-    smart_id: string
-    headshot: string
-    suffix: string
-    uniform_number: number
-    draft_round: string
+	status: string
+	display_name: string
+	first_name: string
+	last_name: string
+	esb_id: string
+	gsis_id: string
+	birth_date: string
+	college_name: string
+	position_group: string
+	position: string
+	jersey_number: string
+	height: string
+	weight: string
+	years_of_experience: string
+	team_abbr: string
+	team_seq: string
+	current_team_id: string
+	football_name: string
+	entry_year: string
+	rookie_year: string
+	draft_club: string
+	draft_string: string
+	college_conference: string
+	status_description_abbr: string
+	status_short_description: string
+	gsis_it_id: string
+	short_name: string
+	smart_id: string
+	headshot: string
+	suffix: string
+	uniform_string: string
+	draft_round: string
 }
 
 //  {
@@ -114,14 +117,13 @@ export interface Player {
 // 	logo: "https://img.cryptorank.io/coins/fhenix1695737384486.png",
 // }
 
-
 export interface ChainConfig {
-    chainNamespace: string
-    chainId: string
-    rpcTarget: string
-    displayName: string
-    blockExplorerUrl: string
-    ticker: string
-    tickerName: string
-    logo: string
+	chainNamespace: string
+	chainId: string
+	rpcTarget: string
+	displayName: string
+	blockExplorerUrl: string
+	ticker: string
+	tickerName: string
+	logo: string
 }

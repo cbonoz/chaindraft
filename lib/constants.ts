@@ -1,3 +1,5 @@
+import { RequestData } from "./types"
+
 export const DEFAULT_PLAYER_IMAGE = "/default_player_image.png"
 export const POSITIONS: string[] = ["QB", "RB", "WR", "TE", "FLEX"]
 
@@ -10,4 +12,11 @@ export const EMPTY_DRAFT: Record<string, null> = {
 	WR: null,
 	TE: null,
 	FLEX: null,
+}
+
+export const DEFAULT_CONTEST: RequestData = {
+	name: "",
+	entryFee: 0,
+	// one week from now
+	closeDateMillis: Date.now() + 7 * 24 * 60 * 60 * 1000,
 }

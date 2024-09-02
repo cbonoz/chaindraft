@@ -2,6 +2,7 @@
 import React from "react"
 import { useWeb3AuthContext } from "../context/Web3AuthContext"
 import ConnectWallet from "./wallet/connect-wallet"
+import { SwitchNetwork } from './wallet/switch-network'
 
 const NavHeader = () => {
 	const { provider, address } = useWeb3AuthContext()
@@ -35,9 +36,9 @@ const NavHeader = () => {
 					</span>
 				)}
 			</nav>
-			{/* <span className="ml-auto align-right justify-end">
+			<span className="ml-auto align-right justify-end">
 				<SwitchNetwork />
-			</span> */}
+			</span>
 			<span className="align-right justify-end">
 				<ConnectWallet />
 			</span>

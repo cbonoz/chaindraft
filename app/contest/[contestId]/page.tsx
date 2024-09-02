@@ -5,7 +5,7 @@ import RenderObject from "@/components/render-object"
 import { Button } from "@/components/ui/button"
 import { APP_CONTRACT } from "@/lib/contract/metadata"
 import { useEthersSigner } from "@/lib/get-signer"
-import { ContractMetadata, SchemaEntry } from "@/lib/types"
+import { ContesttMetadata, SchemaEntry } from "@/lib/types"
 import {
 	abbreviate,
 	formatCurrency,
@@ -13,7 +13,6 @@ import {
 	getAttestationUrl,
 	getExplorerUrl,
 	getIpfsUrl,
-	transformMetadata,
 } from "@/lib/utils"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import Link from "next/link"
@@ -21,10 +20,8 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import SignatureCanvas from "react-signature-canvas"
 import { Address, Chain, createPublicClient, http } from "viem"
-import { writeContract } from "@wagmi/core"
 import crypto from "crypto"
 
-import { useAccount, useChainId, useChains, useWriteContract } from "wagmi"
 import { createAttestation, getAttestation } from "@/lib/ethsign"
 import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
@@ -46,7 +43,7 @@ interface Params {
 export default function ContestPage({ params }: { params: Params }) {
 	const [loading, setLoading] = useState(true)
 	const [signLoading, setSignLoading] = useState(false)
-	const [data, setData] = useState<ContractMetadata | undefined>()
+	const [data, setData] = useState<ContesttMetadata | undefined>()
 	const [result, setResult] = useState<any>(null)
 	const [error, setError] = useState<any>(null)
 	const ref = useRef(null)
@@ -67,12 +64,12 @@ export default function ContestPage({ params }: { params: Params }) {
 			// 	chain: currentChain,
 			// 	transport: http(),
 			// })
-			// let contractData: ContractMetadata = transformMetadata(
+			// let contractData: ContesttMetadata = transformMetadata(
 			// 	(await publicClient.readContract({
 			// 		abi: APP_CONTRACT.abi,
 			// 		address: contestId,
 			// 		functionName: "getMetadata",
-			// 	})) as ContractMetadata
+			// 	})) as ContesttMetadata
 			// )
 			let contractData: any = {}
 			// convert balance and validatedAt to number from bigint
@@ -91,13 +88,6 @@ export default function ContestPage({ params }: { params: Params }) {
 		}
 	}
 
-	// https://wagmi.sh/react/guides/read-from-contract
-	// const { data: balance } = useReadContract({
-	//     ...wagmiContractConfig,
-	//     functionName: 'balanceOf',
-	//     args: ['0x03A71968491d55603FFe1b11A9e23eF013f75bCF'],
-	//   })
-
 	async function signRequest() {
 		if (!data) {
 			alert("No data to sign - try another url")
@@ -111,7 +101,7 @@ export default function ContestPage({ params }: { params: Params }) {
 		}
 
 		setSignLoading(true)
-		const d: ContractMetadata = data
+		const d: ContesttMetadata = data
 		// generate hash of privateKey
 		signature = crypto
 			.createHash("sha256")

@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
-import { useAccount } from "wagmi"
 
 export const RouteButtons = () => {
 	const router = useRouter()

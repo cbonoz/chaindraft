@@ -6,7 +6,6 @@ import "./globals.css"
 import NavHeader from "@/components/nav-header"
 import { Providers } from "./providers"
 import { headers } from "next/headers"
-import { cookieToInitialState } from "wagmi"
 const inter = Inter({ subsets: ["latin"] })
 
 // {/* https://docs.saturn.tech/fetching-from-saturn#0fd2ebd8ca11499891917dde4c04fc91 */} */}

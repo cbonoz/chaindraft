@@ -19,6 +19,7 @@ contract DraftContract {
         bool isActive;
         address winner;
         uint creationTime;     // Timestamp when the contest was created
+        uint closeTime;        // Timestamp when the contest closes for new submissions
         bytes32 passcodeHash;  // Hash of the optional passcode for the contest
         address owner;         // Owner of the contest
     }
@@ -27,8 +28,14 @@ contract DraftContract {
     mapping(uint => Contest) public contests;
     uint public contestCount;
 
-    // Create a new contest with an optional passcode and entry fee
-    function createContest(string memory _name, uint _entryFee, string memory _passcode) public {
+    // Create a new contest with an optional passcode, entry fee, and close time
+    function createContest(
+        string memory _name,
+        uint _entryFee,
+        string memory _passcode,
+        uint _closeTime
+    ) public {
+        require(_closeTime > block.timestamp, "Close time must be in the future");
         contestCount++;
         Contest storage newContest = contests[contestCount];
         newContest.name = _name;
@@ -36,6 +43,7 @@ contract DraftContract {
         newContest.prizePool = 0;
         newContest.isActive = true;
         newContest.creationTime = block.timestamp; // Record contest creation time
+        newContest.closeTime = _closeTime; // Set the contest close time
         newContest.owner = msg.sender; // Set the owner of the contest
 
         // Set passcode hash if passcode is provided, otherwise set to 0
@@ -47,9 +55,14 @@ contract DraftContract {
     }
 
     // Submit a lineup for a contest
-    function submitLineup(uint _contestId, string[5] memory _playerIds, string memory _passcode) public payable {
+    function submitLineup(
+        uint _contestId,
+        string[5] memory _playerIds,
+        string memory _passcode
+    ) public payable {
         Contest storage contest = contests[_contestId];
         require(contest.isActive, "Contest is not active");
+        require(block.timestamp <= contest.closeTime, "Submission period has ended");
         require(!contest.lineups[msg.sender].isSubmitted, "Lineup already submitted");
 
         // If the contest has an entry fee, check that the correct amount is sent
@@ -61,7 +74,10 @@ contract DraftContract {
 
         // Check passcode if it is set
         if (contest.passcodeHash != bytes32(0)) {
-            require(keccak256(abi.encodePacked(_passcode)) == contest.passcodeHash, "Incorrect passcode");
+            require(
+                keccak256(abi.encodePacked(_passcode)) == contest.passcodeHash,
+                "Incorrect passcode"
+            );
         }
 
         // Add the sender to the participants list
@@ -119,6 +135,7 @@ contract DraftContract {
         bool isActive,
         address winner,
         uint creationTime,
+        uint closeTime,
         address owner
     ) {
         Contest storage contest = contests[_contestId];
@@ -128,6 +145,7 @@ contract DraftContract {
         isActive = contest.isActive;
         winner = contest.winner;
         creationTime = contest.creationTime;
+        closeTime = contest.closeTime;
         owner = contest.owner;
     }
 
