@@ -1,7 +1,6 @@
 "use client"
 
 import { Web3AuthProvider } from "@/context/Web3AuthContext"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 
 type Props = {
@@ -9,12 +8,13 @@ type Props = {
 	initialState: {}
 }
 
-const queryClient = new QueryClient()
+// const queryClient = new QueryClient()
 
 export function Providers({ children, initialState }: Props) {
 	return (
 		<Web3AuthProvider>
-			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+			{/* <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> */}
+			{children}
 		</Web3AuthProvider>
 	)
 }

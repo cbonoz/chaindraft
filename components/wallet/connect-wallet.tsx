@@ -1,15 +1,13 @@
 "use client"
-import { useAccount } from "wagmi"
-import { WalletOptions } from "./wallet-options"
 import { abbreviate } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 
 function ConnectWallet() {
-	const { provider, address, connectWallet, disconnectWallet } =
+	const { signer, address, connectWallet, disconnectWallet } =
 		useWeb3AuthContext()
 
-	if (provider) {
+	if (!!signer) {
 		return (
 			<span>
 				{abbreviate(address)}{" "}

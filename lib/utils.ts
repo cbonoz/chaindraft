@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
 import { CustomChainConfig } from "@web3auth/base"
 import { ethers } from "ethers"
-import { ContestMetadata } from './types'
+import { ContestMetadata } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -64,18 +64,27 @@ export const getPlaceholderDescription = () => {
 	return `This is to validate proof of funds to have your offer considered. See the attachment below, sign at your earliest convenience but this would be nice to have by ${date}.`
 }
 
+export const getContestUrl = (contestId: string) => {
+	return `/contest/${contestId}`
+}
+
+// convert maybe date to millis
+export const dateToMillis = (d: Date | string | number | undefined) => {
+	if (!(d instanceof Date)) {
+		d = d ? new Date(d) : new Date()
+	}
+	return d.getTime()
+}
+
+export const isContestUrl = (url: string) => {
+	return url.includes("/contest/")
+}
+
 export const requireValue = (value: any, errMessage: string) => {
 	if (!value) {
 		throw new Error(errMessage)
 	}
 	return value
-}
-
-export const transformMetadata = (contractData: ContestMetadata) => {
-	contractData.balance = Number(contractData.balance)
-	contractData.validatedAt = Number(contractData.validatedAt) * 1000
-	contractData.createdAt = Number(contractData.createdAt) * 1000
-	return contractData
 }
 
 export const formatDate = (
@@ -149,4 +158,31 @@ export function capitalize(s: string) {
 
 export const getIpfsUrl = (cid: string) => {
 	return `https://gateway.lighthouse.storage/ipfs/${cid}`
+}
+
+export const contestArrayToObject = (
+	contestId: any,
+	arr: any[]
+): ContestMetadata => {
+	const [
+		name,
+		entryFee,
+		prizePool,
+		isActive,
+		winner,
+		creationTime,
+		closeTime,
+		owner,
+	] = arr
+	return {
+		id: contestId,
+		name,
+		entryFee,
+		prizePool,
+		isActive,
+		winner,
+		creationTime,
+		closeTime,
+		owner,
+	}
 }

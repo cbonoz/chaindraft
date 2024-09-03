@@ -19,13 +19,12 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import SignatureCanvas from "react-signature-canvas"
-import { Address, Chain, createPublicClient, http } from "viem"
-import crypto from "crypto"
 
 import { createAttestation, getAttestation } from "@/lib/ethsign"
 import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
-import { getContestInfo } from "@/lib/contract/commands"
+import { getContestInfo, requireContractAddress } from "@/lib/contract/commands"
+import { CHAIN_OPTIONS, CHILIZ_TESTNET } from "@/lib/chains"
 
 const RESULT_KEYS = [
 	"name",
@@ -38,13 +37,13 @@ const RESULT_KEYS = [
 ]
 
 interface Params {
-	contestId: Address
+	contestId: string
 }
 
 export default function ContestPage({ params }: { params: Params }) {
 	const [loading, setLoading] = useState(true)
 	const [signLoading, setSignLoading] = useState(false)
-	const [data, setData] = useState<ContesttMetadata | undefined>()
+	const [data, setData] = useState<ContestMetadata | undefined>()
 	const [result, setResult] = useState<any>(null)
 	const [error, setError] = useState<any>(null)
 	const ref = useRef(null)
@@ -59,6 +58,10 @@ export default function ContestPage({ params }: { params: Params }) {
 	} = useWeb3AuthContext()
 
 	async function fetchData() {
+		if (!signer || !currentChain) {
+			return
+		}
+
 		setLoading(true)
 		try {
 			const contractData: ContestMetadata = await getContestInfo(
@@ -145,11 +148,9 @@ export default function ContestPage({ params }: { params: Params }) {
 		return <div>Please connect your wallet</div>
 	}
 
-	const authorized = data && address === data.recipientAddress
 	const invalid = !loading && !data
-	const isValidated = Boolean(data?.validatedAt)
-	const showContest = Boolean(authorized && !isValidated)
-	const showResult = Boolean(authorized && isValidated)
+	const showDraft = Boolean(data?.isActive)
+	const showResult = Boolean(data && !data.winner)
 
 	const getTitle = () => {
 		if (showResult) {
@@ -157,7 +158,7 @@ export default function ContestPage({ params }: { params: Params }) {
 				<span className="text-green-500">This request has been validated!</span>
 			)
 		}
-		if (showContest) {
+		if (showDraft) {
 			return data?.name || "Fantasy Contest"
 		}
 		return "Fantasy Contest"
@@ -179,26 +180,8 @@ export default function ContestPage({ params }: { params: Params }) {
 						</p>
 					</div>
 				)}
-
-				{!authorized && (
-					<div>
-						<p>Not authorized to sign this request</p>
-					</div>
-				)}
-
 				{showResult && (
 					<div>
-						<div className="text-sm text-bold">
-							<Link
-								className="text-blue-500 hover:underline"
-								rel="noopener noreferrer"
-								target="_blank"
-								href={getExplorerUrl(contestId, currentChain) || ""}
-							>
-								View on {data?.network || "explorer"}
-							</Link>
-						</div>
-
 						{/* <div className="text-black-500"> */}
 						<div>
 							This request was validated by{" "}
@@ -234,36 +217,25 @@ export default function ContestPage({ params }: { params: Params }) {
 					</div>
 				)}
 
-				{showContest && (
+				{showDraft && (
 					<div>
 						<div className="text-sm text-bold">
 							<Link
 								className="text-blue-500 hover:underline"
 								rel="noopener noreferrer"
 								target="_blank"
-								href={getExplorerUrl(contestId, currentChain) || ""}
+								href={getExplorerUrl(
+									requireContractAddress(
+										currentChain?.chainId || CHILIZ_TESTNET.chainId
+									),
+									currentChain
+								)}
 							>
-								View on {data?.network || "explorer"}
+								View on {currentChain?.displayName || "explorer"}
 							</Link>
 						</div>
 
-						{data && <PlayerDraft contestId={contestId} />}
-
-						<div className="my-4 border w-[325px] p-1">
-							<div className="text-med font-bold">Sign here</div>
-							<SignatureCanvas ref={ref} />
-						</div>
-
-						<Button
-							onClick={() => {
-								signRequest()
-							}}
-						>
-							{signLoading && (
-								<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-							)}
-							Submit draft
-						</Button>
+						<PlayerDraft contestId={contestId} />
 					</div>
 				)}
 

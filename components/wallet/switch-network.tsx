@@ -23,7 +23,7 @@ export function SwitchNetwork() {
 					setActiveChain(newChain)
 				}
 			}}
-			value={activeChain.chainId + ""}
+			value={activeChain?.chainId || CHAIN_OPTIONS[0].chainId}
 		>
 			<SelectTrigger className="w-[180px]">
 				<SelectValue placeholder="Select network" />

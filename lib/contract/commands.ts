@@ -1,11 +1,18 @@
 import { APP_CONTRACT } from "./metadata"
-import { formatDate, requireValue } from "../utils"
+import {
+	contestArrayToObject,
+	dateToMillis,
+	formatDate,
+	requireValue,
+} from "../utils"
 import { ethers } from "ethers"
-import { CONTRACT_ADDRESS_KAP } from "../chains"
+import { CONTRACT_ADDRESS_MAP } from "../chains"
+import { ContestMetadata, RequestData } from "../types"
+import { sub } from "date-fns"
 
 export function requireContractAddress(network: string) {
 	const address = requireValue(
-		CONTRACT_ADDRESS_KAP[network],
+		CONTRACT_ADDRESS_MAP[network],
 		"Master app contract address not found for network: " + network
 	)
 	return address
@@ -25,7 +32,25 @@ export async function deployContract(signer: any) {
 
 	contract = await contract.waitForDeployment()
 	console.log("deployed contract...", contract.target)
-	return contract.target
+	return { address: contract.target }
+}
+
+export const createContest = async (
+	signer: any,
+	chainId: string,
+	data: RequestData
+) => {
+	const address = requireContractAddress(chainId)
+	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
+	const submissionCloseDate = dateToMillis(data.closeDateMillis)
+	const result = await contract.createContest(
+		data.name,
+		data.entryFee,
+		data.passcode || "",
+		submissionCloseDate
+	)
+	console.log("result", result)
+	return result
 }
 
 export const submitEntry = async (
@@ -59,10 +84,10 @@ export const getContestInfo = async (
 	signer: any,
 	chainId: string,
 	contestId: number
-) => {
+): Promise<ContestMetadata> => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
 	const result = await contract.getContestInfo(contestId)
 	console.log("result", contestId, result)
-	return result
+	return contestArrayToObject(contestId, result)
 }

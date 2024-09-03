@@ -34,7 +34,7 @@ contract DraftContract {
         uint _entryFee,
         string memory _passcode,
         uint _closeTime
-    ) public {
+    ) public returns (uint) {
         require(_closeTime > block.timestamp, "Close time must be in the future");
         contestCount++;
         Contest storage newContest = contests[contestCount];
@@ -52,6 +52,7 @@ contract DraftContract {
         } else {
             newContest.passcodeHash = bytes32(0);
         }
+        return contestCount;
     }
 
     // Submit a lineup for a contest

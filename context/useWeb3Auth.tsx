@@ -12,21 +12,40 @@ import { CHAIN_OPTIONS } from "@/lib/chains"
 import { CustomChainConfig } from "@web3auth/base"
 
 import { MetamaskAdapter } from "@web3auth/metamask-adapter"
-import { connect } from "http2"
+import { isEmpty } from "@/lib/utils"
+const PREVIOUSLY_CONNECTED_KEY = "previouslyConnected"
 
 const useWeb3Auth = () => {
 	const [provider, setProvider] = useState<any>(null)
 	const [web3Auth, setWeb3Auth] = useState<any>(null)
 	const [signer, setSigner] = useState<any>(null)
 	const [address, setAddress] = useState<string | null>(null)
-	const [activeChain, setActiveChain] = useState<CustomChainConfig>(
-		CHAIN_OPTIONS[0]
-	)
+	const [activeChain, setActiveChain] = useState<
+		CustomChainConfig | undefined
+	>()
 	const [error, setError] = useState(null)
 
 	useEffect(() => {
-		connectWallet()
+		if (activeChain) {
+			connectWallet()
+		}
 	}, [activeChain])
+
+	useEffect(() => {
+		const previouslyConnectedChainId = localStorage.getItem(
+			PREVIOUSLY_CONNECTED_KEY
+		)
+		if (previouslyConnectedChainId) {
+			const chain = CHAIN_OPTIONS.find(
+				(chain) => chain.chainId === previouslyConnectedChainId
+			)
+			if (chain) {
+				setActiveChain(chain)
+			}
+		} else {
+			setActiveChain(CHAIN_OPTIONS[0])
+		}
+	}, [])
 
 	useEffect(() => {
 		if (provider) {
@@ -46,6 +65,9 @@ const useWeb3Auth = () => {
 	}, [provider])
 
 	const connectWallet = async () => {
+		if (!activeChain) {
+			return
+		}
 		try {
 			const privateKeyProvider = new EthereumPrivateKeyProvider({
 				config: { chainConfig: activeChain },
@@ -64,6 +86,13 @@ const useWeb3Auth = () => {
 			web3.configureAdapter(metamaskAdapter)
 
 			await web3.initModal()
+			const previouslyConnectedChainId = localStorage.getItem(
+				PREVIOUSLY_CONNECTED_KEY
+			)
+			if (!isEmpty(previouslyConnectedChainId)) {
+				await web3.connect()
+			}
+			localStorage.setItem(PREVIOUSLY_CONNECTED_KEY, activeChain.chainId)
 			setProvider(web3.provider)
 			setWeb3Auth(web3)
 		} catch (err: any) {
@@ -77,6 +106,7 @@ const useWeb3Auth = () => {
 			if (provider?.provider?.disconnect) {
 				await provider.provider.disconnect()
 			}
+			localStorage?.removeItem(PREVIOUSLY_CONNECTED_KEY)
 			setWeb3Auth(null)
 			setProvider(null)
 			setSigner(null)

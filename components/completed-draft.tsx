@@ -7,6 +7,7 @@ import Image from "next/image"
 import { POSITIONS } from "@/lib/constants"
 import { Button } from "./ui/button"
 import { ReloadIcon } from "@radix-ui/react-icons"
+import ReactSignatureCanvas from "react-signature-canvas"
 
 interface Props {
 	draftedPlayers: Record<string, Player | null>
@@ -17,6 +18,7 @@ interface Props {
 const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
 	const [loading, setLoading] = useState(false)
 	const [result, setResult] = useState<any>(null)
+	const ref = React.useRef<any>()
 
 	const players = Object.values(draftedPlayers).filter(
 		(player) => player !== null
@@ -63,6 +65,11 @@ const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
 					</div>
 				))}
 			</div>
+			<div className="my-4 border w-[325px] p-1">
+				<div className="text-med font-bold">Sign here</div>
+				<ReactSignatureCanvas ref={ref} />
+			</div>
+
 			<div>
 				<Button
 					onClick={onSubmit}

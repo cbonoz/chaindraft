@@ -4,8 +4,8 @@ import BasicCard from "@/components/basic-card"
 import RenderObject from "@/components/render-object"
 import { Button } from "@/components/ui/button"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
-import { deployContract } from "@/lib/contract/deploy"
-import { useEthersSigner } from "@/lib/get-signer"
+import { CHILIZ_TESTNET, CONTRACT_ADDRESS_MAP } from "@/lib/chains"
+import { deployContract } from "@/lib/contract/commands"
 import { getExplorerUrl, getReadableError, isEmpty } from "@/lib/utils"
 import { siteConfig } from "@/util/site-config"
 import { ReloadIcon } from "@radix-ui/react-icons"
@@ -25,7 +25,7 @@ const AdminPage = () => {
 
 		try {
 			// Deploy master contract
-			const res = await deployContract(signer, currentChain?.name || "ethereum")
+			const res = await deployContract(signer)
 			console.log("Master contract deployed:", res)
 			setContract(res)
 		} catch (err) {
@@ -36,17 +36,25 @@ const AdminPage = () => {
 		}
 	}
 
+	const masterAddress =
+		CONTRACT_ADDRESS_MAP[currentChain?.chainId || CHILIZ_TESTNET.chainId]
+
 	return (
 		<div className="flex flex-row items-center justify-center mt-8">
 			<BasicCard title={`Deploy ${siteConfig.title} master contract`}>
-				{siteConfig.masterAddress && (
-					<p>Master contract address: {siteConfig.masterAddress}</p>
+				{masterAddress && (
+					<p>
+						Master contract address: {masterAddress} (
+						{currentChain?.displayName})
+					</p>
 				)}
-				{!siteConfig.masterAddress && <p>Master contract address not set</p>}
+				{!masterAddress && (
+					<p>Master contract address not set ({currentChain?.displayName})</p>
+				)}
 
 				<div className="text-md my-4">
 					Deploy a new master contract instance to the{" "}
-					{currentChain?.name || ""} blockchain.
+					{currentChain?.displayName || ""} blockchain.
 				</div>
 
 				<Button onClick={deployMasterContract} disabled={loading}>
@@ -77,7 +85,7 @@ const AdminPage = () => {
 							rel="noreferrer"
 							className="text-blue-500 mt-4 block text-sm hover:underline"
 						>
-							View contract on {currentChain?.name} explorer
+							View contract on {currentChain?.displayName} explorer
 						</a>
 					</div>
 				)}

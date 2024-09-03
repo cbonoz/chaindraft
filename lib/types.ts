@@ -19,6 +19,7 @@ export interface SchemaItem {
 // uint closeTime,
 // address owner
 export interface ContestMetadata {
+    id?: string | number
 	name: string
 	entryFee: number
 	prizePool: number
