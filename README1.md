@@ -5,24 +5,23 @@
 Chaindraft
 ---
 
-A blockchain-based fantasy draft game with challenge-able player pages.
+A blockchain-based fantasy draft game with challenge-able contest pages.
 
-Generate your dream lineup for offline contest or sportsbook using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url and minted nft proving you drafted a given roster and at what time. Challenge other players
+Generate your dream lineup for offline contest or sportsbook using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url and attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
 
-Track trending players
-
-Initiate 1:1 competitions with other draft makers.
+Initiate competitions with other draft makers.
 
 Chiliz for L1 deployment (public voting and trending players)
-Fhenix for L2 deployment (private voting and drafts)
+Fhenix for L2 deployment (private voting and security)
+Morph for L2 deployment (settlement and speed)
 
 ### Inspiration
 
 Pain points:
 
-- Traditional fantasy football platforms are centralized, and often require large engineering teams to run.
+- Traditional fantasy football platforms are centralized, and often require large engineering teams to run. Chaindraft is a completely smart-contract driven solution with lineups and verdicts saved as entries on each network-specific contract.
 - There is often limited flexibility and customization in league settings and rules.
-- Transaction fees and delays can frustrate users, especially when dealing with withdraws and rewards. Example: many platforms require entering your SSN just to cash out!
+- Transaction fees and high KYC can cause frustration, especially when dealing with withdraws and rewards. Example: many platforms require entering your SSN just to cash out! Platforms like FanDuel taking 10% of every paid contest.
 - Managing league data securely and transparently is a challenge with existing solutions.
 
 ### How Blockchain is Used
@@ -33,13 +32,27 @@ Pain points:
 
 ### Technologies Used
 
-- Web3Auth: Modal-based authentication. Main form of login for app.
-- **Sign Protocol**: Ensures the human verifiable claim that the roster was produced randomly
+- **Web3Auth**: Modal-based authentication. Main form of login for app.
+- **Sign Protocol**: Ensures the human verifiable claim that the roster was produced randomly. A schema entry and attestation is created for each player draft as proof / evidence of non-tampering between submission and time of contest evaluation.
 - **Chiliz**: A blockchain-based fintech platform that allows fans to buy, trade, and execute voting rights in their favorite sports teams. In the context of BlockFantasy, Chiliz can be used for fan engagement and rewards, offering unique experiences and merchandise. Earn fan tokens for giving votes.
-- **Lit Protocol**: Used for secure and decentralized access control, ensuring that only authorized users can access specific features or data within the app. It can also be used for encrypting sensitive user information. - User Identity / Proof of humanity / KYC
 
-- **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. This can be used for communication between league members, announcements, and notifications about league activities.
-- **Tableland/Basin**: Upload new images via s3
+Link to master contract (testnet):
+Example contest on Chiliz network:
+
+- **Lit Protocol**: Used for secure and decentralized access control, ensuring that only authorized users can access specific features or data within the app. It can also be used for encrypting sensitive user information. - User Identity / Proof of humanity / KYC at time of submission to avoid bot submissions to contests.
+- **Web3Auth**: Provides a user-friendly interface for users to connect their wallets to the Chaindraft application. Each chain config is embedded and selectable in the app, and authentication state is saved/preserved upon refresh. Providers from each wallet are used to execute transactions for each contest smart contract entry.
+- **Fhenix**: L2 chain used to provide additional security and a      lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
+
+Link to master contract (testnet):
+Example contest on Fhenix network:
+
+- **Morph**: L2 chain used to provide additional security and a      lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
+
+Link to master Morph contract (testnet):
+Example contest on Morph network:
+
+- **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. After a contest starts and XMTP Chat becomes available on the contest page for users to discuss live - including the outcome. A unique chat is automatically created for each contest.
+<!-- - **Tableland/Basin**: Upload new images via s3 -->
 
 ### Challenges
 
@@ -47,17 +60,12 @@ Pain points:
 - Ensuring a smooth user experience while interacting with blockchain features like smart contracts and digital wallets.
 - Balancing decentralization with the need for quick and responsive user interactions.
 
-### Future Work
+### Potential Future Work
 
-- **Expanding cross-chain capabilities** to support more blockchains, offering users a broader range of options for transactions and participation.
-- **Developing a mobile app** to enhance accessibility and user experience on the go.
-- **Implementing advanced analytics tools** to provide in-depth insights into player performance and league trends.
-- **Exploring partnerships with sports teams and organizations** to offer exclusive content and experiences for users.
-- **Integrating with NFT marketplaces** to allow users to buy, sell, and trade fantasy football-related NFTs.
-- **Enhancing security and privacy features** to ensure user data protection and compliance with regulatory standards.
-- **Introducing a governance model** where users can vote on platform updates, rules changes, and other key decisions, promoting a community-driven approach.
-
-These features and technologies will position BlockFantasy as a leading, innovative solution in the decentralized fantasy sports market, offering users unparalleled transparency, security, and engagement.
+- **Expanding cross-chain capabilities** to support more blockchains, offering users a broader range of options for transactions and participation including contests across multiple networks at the same time.
+- **Integrating with NFT marketplaces** to allow users to buy, sell, and trade fantasy draft-related NFTs. Create an NFT either showcasing your particular random draft or a contest win.
+- **Payment and user model**: Support tracking user performance in contests over time and controlled payouts and incentives for participating in more contests with friends.
+- **Automated verdicts**: NFL does have some lockdown on APIs for fetching conclusions and lineups. Production deployment should use official APIs and authentication keys for doing more automated contest verdicts.
 
 
 ### Useful links
