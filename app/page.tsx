@@ -22,14 +22,13 @@ export default function Home() {
 	const [playerIndex, setPlayerIndex] = useState(0)
 	const activePlayer = ACTIVE_PLAYERS_WITH_HEADSHOTS[playerIndex]
 	return (
-		<main className="flex min-h-screen flex-col items-center p-24">
+		<main className="flex min-h-screen flex-col p-24">
 			{/* <h1 className="text-4xl font-bold">Welcome to chaindraft</h1> */}
 			<div>
 				<img src="/logo.png" alt="chaindraft" className="my-4" />
 				<p className="text-lg pt-8">{siteConfig.description}.</p>
 			</div>
-
-			<div>
+			<div className="mt-8">
 				<RouteButtons />
 			</div>
 		</main>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Web3Auth } from "@web3auth/modal"
 import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base"
+import { WALLET_ADAPTERS } from "@web3auth/base"
 
 import { ethers } from "ethers"
 import Error from "next/error"
@@ -85,7 +86,14 @@ const useWeb3Auth = () => {
 			})
 			web3.configureAdapter(metamaskAdapter)
 
-			await web3.initModal()
+			await web3.initModal({
+				modalConfig: {
+					[WALLET_ADAPTERS.OPENLOGIN]: {
+						label: "openlogin",
+						showOnModal: false,
+					},
+				},
+			})
 			const previouslyConnectedChainId = localStorage.getItem(
 				PREVIOUSLY_CONNECTED_KEY
 			)

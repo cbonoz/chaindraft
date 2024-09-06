@@ -23,6 +23,8 @@ function ConnectWallet() {
 	}
 	return (
 		<Button
+			className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded cursor-pointer pointer"
+			variant="secondary"
 			onClick={() => {
 				connectWallet()
 			}}

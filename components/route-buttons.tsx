@@ -6,19 +6,21 @@ import { Button } from "./ui/button"
 export const RouteButtons = () => {
 	const router = useRouter()
 	return (
-		<div className="flex space-x-4">
+		<div className="space-x-4">
 			<Button
-				className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+				size={"lg"}
+				className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
 				onClick={() => router.push("/create")}
 			>
-				Draft
+				Create contest
 			</Button>
 
 			<Button
-				className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+				size={"lg"}
+				className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
 				onClick={() => router.push("/contest")}
 			>
-				Challenge
+				Enter a challenge
 			</Button>
 		</div>
 	)
