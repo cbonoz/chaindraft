@@ -15,7 +15,7 @@ interface Props {
 	contestId: string
 }
 
-const PlayerDraft = ({contestId}: Props) => {
+const PlayerDraft = ({ contestId }: Props) => {
 	const [draftedPlayers, setDraftedPlayers] =
 		useState<Record<string, Player | null>>(EMPTY_DRAFT)
 	const [skipsLeft, setSkipsLeft] = useState(siteConfig.maxDraftSkips)
@@ -65,13 +65,17 @@ const PlayerDraft = ({contestId}: Props) => {
 		siteConfig.numberDraftPlayers
 
 	if (isTerminalState) {
-		return <CompletedDraft draftedPlayers={draftedPlayers} reset={reset} contestId={contestId} />
+		return (
+			<CompletedDraft
+				draftedPlayers={draftedPlayers}
+				reset={reset}
+				contestId={contestId}
+			/>
+		)
 	}
 
 	return (
 		<div className="w-full max-w-[1200px]">
-			<h1 className="text-2xl font-bold mb-4">Fantasy Football Draft</h1>
-
 			<Progress
 				value={(currentIndex / siteConfig.numberDraftPlayers) * 100}
 				className="mb-8"

@@ -58,12 +58,12 @@ const AdminPage = () => {
 				</div>
 
 				<Button onClick={deployMasterContract} disabled={loading}>
+					Deploy master contract
 					{loading && (
-						<span className="animate-spin">
+						<span className="animate-spin ml-1">
 							<ReloadIcon />
 						</span>
 					)}
-					&nbsp; Deploy master contract
 				</Button>
 
 				{loading && (

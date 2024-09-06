@@ -60,10 +60,9 @@ const CreateContest = () => {
 				activeChain?.chainId || CHAIN_OPTIONS[0].chainId,
 				data
 			)
-			setResult({
-				success: true,
-				...res,
-			})
+			res["success"] = true
+			console.log("res", res)
+			setResult(res)
 		} catch (err: any) {
 			console.error(err)
 			setError(getReadableError(err))
@@ -177,12 +176,18 @@ const CreateContest = () => {
 								onChange={handleChange}
 							/>
 
-							<Button onClick={submit} className="mt-4" disabled={loading}>
-								{loading && (
-									<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-								)}
+							<Button
+								onClick={submit}
+								className="mt-4 bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded cursor-pointer pointer"
+								disabled={loading}
+							>
 								Create contest&nbsp;
-								<CiFootball size={"medium"} />
+								{!loading && <CiFootball size={"medium"} />}
+								{loading && (
+									<span className="animate-spin ml-1">
+										<ReloadIcon />
+									</span>
+								)}
 							</Button>
 						</div>
 					)}

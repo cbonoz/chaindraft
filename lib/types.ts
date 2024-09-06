@@ -3,6 +3,7 @@ export interface RequestData {
 	name?: string
 	closeDateMillis?: number
 	passcode?: string
+	allowedTeams?: string[]
 }
 
 export interface SchemaItem {
@@ -19,11 +20,12 @@ export interface SchemaItem {
 // uint closeTime,
 // address owner
 export interface ContestMetadata {
-    id?: string | number
+	id?: string | number
 	name: string
 	entryFee: number
 	prizePool: number
 	isActive: boolean
+	attestationId?: string
 	winner: string
 	creationTime: number
 	closeTime: number

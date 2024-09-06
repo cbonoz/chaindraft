@@ -18,6 +18,7 @@ contract DraftContract {
         mapping(address => Lineup) lineups;
         bool isActive;
         address winner;
+        string allowedTeams;   // List of allowed teams for the contest
         uint creationTime;     // Timestamp when the contest was created
         uint closeTime;        // Timestamp when the contest closes for new submissions
         bytes32 passcodeHash;  // Hash of the optional passcode for the contest
@@ -33,7 +34,8 @@ contract DraftContract {
         string memory _name,
         uint _entryFee,
         string memory _passcode,
-        uint _closeTime
+        uint _closeTime,
+        string memory _allowedTeams
     ) public returns (uint) {
         require(_closeTime > block.timestamp, "Close time must be in the future");
         contestCount++;
@@ -43,6 +45,7 @@ contract DraftContract {
         newContest.prizePool = 0;
         newContest.isActive = true;
         newContest.creationTime = block.timestamp; // Record contest creation time
+        newContest.allowedTeams = _allowedTeams; // Set the allowed teams
         newContest.closeTime = _closeTime; // Set the contest close time
         newContest.owner = msg.sender; // Set the owner of the contest
 
@@ -137,7 +140,9 @@ contract DraftContract {
         address winner,
         uint creationTime,
         uint closeTime,
-        address owner
+        string memory allowedTeams,
+        address owner,
+        address[] memory participants
     ) {
         Contest storage contest = contests[_contestId];
         name = contest.name;
@@ -147,7 +152,9 @@ contract DraftContract {
         winner = contest.winner;
         creationTime = contest.creationTime;
         closeTime = contest.closeTime;
+        allowedTeams = contest.allowedTeams;
         owner = contest.owner;
+        participants = contest.participants;
     }
 
     // Get a list of participants for a contest

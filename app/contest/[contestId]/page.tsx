@@ -25,6 +25,7 @@ import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { getContestInfo, requireContractAddress } from "@/lib/contract/commands"
 import { CHAIN_OPTIONS, CHILIZ_TESTNET } from "@/lib/chains"
+import ViewContract from "@/components/view-contract"
 
 const RESULT_KEYS = [
 	"name",
@@ -170,7 +171,6 @@ export default function ContestPage({ params }: { params: Params }) {
 			<BasicCard
 				title={getTitle()}
 				// description="Find and verify a fantasy contest using your wallet."
-				className="max-w-[1000px] p-4"
 			>
 				{invalid && (
 					<div>
@@ -219,22 +219,6 @@ export default function ContestPage({ params }: { params: Params }) {
 
 				{showDraft && (
 					<div>
-						<div className="text-sm text-bold">
-							<Link
-								className="text-blue-500 hover:underline"
-								rel="noopener noreferrer"
-								target="_blank"
-								href={getExplorerUrl(
-									requireContractAddress(
-										currentChain?.chainId || CHILIZ_TESTNET.chainId
-									),
-									currentChain
-								)}
-							>
-								View on {currentChain?.displayName || "explorer"}
-							</Link>
-						</div>
-
 						<PlayerDraft contestId={contestId} />
 					</div>
 				)}

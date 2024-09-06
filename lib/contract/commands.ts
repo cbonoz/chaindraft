@@ -43,11 +43,19 @@ export const createContest = async (
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
 	const submissionCloseDate = dateToMillis(data.closeDateMillis)
+
+	let allowedTeams = ""
+
+	if (data.allowedTeams) {
+		allowedTeams = data.allowedTeams.join(",")
+	}
+
 	const result = await contract.createContest(
 		data.name,
 		data.entryFee,
 		data.passcode || "",
-		submissionCloseDate
+		submissionCloseDate,
+		allowedTeams
 	)
 	console.log("result", result)
 	return result
