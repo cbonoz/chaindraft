@@ -17,7 +17,7 @@ contract DraftContract {
         uint entryFee;
         uint prizePool;
         Lineup[] lineups;
-        bool isActive;
+        bool cancelled;     // Flag to indicate if the contest is cancelled
         address winner;
         string allowedTeams;   // List of allowed teams for the contest
         uint creationTime;     // Timestamp when the contest was created
@@ -25,6 +25,13 @@ contract DraftContract {
         bytes32 passcodeHash;  // Hash of the optional passcode for the contest
         address owner;         // Owner of the contest
     }
+
+    // Events
+    event ContestCreated(uint contestId, string name, uint entryFee, uint closeTime, string allowedTeams);
+    event LineupSubmitted(uint contestId, address owner, string[5] playerIds, string attestationId);
+    event ContestCancelled(uint contestId, address owner);
+    event ContestStarted(uint contestId, address owner);
+    event ContestEnded(uint contestId, address winner, uint prizePool);
 
     // Mapping to store contests
     mapping(uint => Contest) public contests;
@@ -44,7 +51,7 @@ contract DraftContract {
         newContest.name = _name;
         newContest.entryFee = _entryFee;
         newContest.prizePool = 0;
-        newContest.isActive = true;
+        newContest.cancelled = false;
         newContest.creationTime = block.timestamp; // Record contest creation time
         newContest.allowedTeams = _allowedTeams; // Set the allowed teams
         newContest.closeTime = _closeTime; // Set the contest close time
@@ -56,6 +63,8 @@ contract DraftContract {
         } else {
             newContest.passcodeHash = bytes32(0);
         }
+        // emit
+        emit ContestCreated(contestCount, _name, _entryFee, _closeTime, _allowedTeams);
         return contestCount;
     }
 
@@ -67,7 +76,7 @@ contract DraftContract {
         string memory _attestationId
     ) public payable {
         Contest storage contest = contests[_contestId];
-        require(contest.isActive, "Contest is not active");
+        require(!contest.cancelled, "Contest is not active");
         require(block.timestamp <= contest.closeTime, "Submission period has ended");
 
         // Check passcode if it is set
@@ -89,7 +98,7 @@ contract DraftContract {
             require(msg.value == 0, "No entry fee required for this contest");
         }
 
-// push the lineup to the contest
+        // push the lineup to the contest
         contest.lineups.push(Lineup({
             playerIds: _playerIds,
             isSubmitted: true,
@@ -102,23 +111,26 @@ contract DraftContract {
         if (contest.entryFee > 0) {
             contest.prizePool += msg.value;
         }
+        // emit
+        emit LineupSubmitted(_contestId, msg.sender, _playerIds, _attestationId);
     }
 
     // End the contest and set the winner
     function setWinner(uint _contestId, address _winner) public {
         Contest storage contest = contests[_contestId];
-        require(contest.isActive, "Contest is not active");
+        require(!contest.cancelled, "Contest is not active");
         require(msg.sender == contest.owner, "Only the contest owner can set the winner");
         require(isParticipant(_contestId, _winner), "The provided address is not a participant");
 
-        // Assign the winner and deactivate the contest
+        // Assign the winner
         contest.winner = _winner;
-        contest.isActive = false;
 
         // Transfer the prize pool to the winner if there is any prize
         if (contest.prizePool > 0) {
             payable(_winner).transfer(contest.prizePool);
         }
+        // emit
+        emit ContestEnded(_contestId, _winner, contest.prizePool);
     }
 
     // Check if an address is a participant in a contest
@@ -137,7 +149,7 @@ contract DraftContract {
         string memory name,
         uint entryFee,
         uint prizePool,
-        bool isActive,
+        bool cancelled,
         address winner,
         uint creationTime,
         uint closeTime,
@@ -150,7 +162,7 @@ contract DraftContract {
         name = contest.name;
         entryFee = contest.entryFee;
         prizePool = contest.prizePool;
-        isActive = contest.isActive;
+        cancelled = contest.cancelled;
         winner = contest.winner;
         creationTime = contest.creationTime;
         closeTime = contest.closeTime;
@@ -175,6 +187,35 @@ contract DraftContract {
     function getParticipants(uint _contestId) public view returns (Lineup[] memory) {
         Contest storage contest = contests[_contestId];
         return contest.lineups;
+    }
+
+    // start contest by settings closedate to now
+    function startContest(uint _contestId) public {
+        Contest storage contest = contests[_contestId];
+        require(msg.sender == contest.owner, "Only the contest owner can start the contest");
+        // check not already cancelled
+        require(!contest.cancelled, "Contest is cancelled");
+        contest.closeTime = block.timestamp;
+        emit ContestStarted(_contestId, msg.sender);
+    }
+
+    // close contest
+    function cancelContest(uint _contestId) public {
+        Contest storage contest = contests[_contestId];
+        require(msg.sender == contest.owner, "Only the contest owner can close the contest");
+        // check not already cancelled
+        require(!contest.cancelled, "Contest is already cancelled");
+        // check not after start time
+        require(block.timestamp < contest.closeTime, "Contest has already started");
+
+        contest.cancelled = true;
+        // issue refunds to all participants
+        if (contest.entryFee > 0) {
+            for (uint i = 0; i < contest.lineups.length; i++) {
+                payable(contest.lineups[i].owner).transfer(contest.entryFee);
+            }
+        }
+        emit ContestCancelled(_contestId, msg.sender);
     }
 
     // Get a player's lineup

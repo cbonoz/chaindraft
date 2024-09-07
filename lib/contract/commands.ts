@@ -1,14 +1,18 @@
 import { APP_CONTRACT } from "./metadata"
 import { contestArrayToObject, dateToMillis, requireValue } from "../utils"
 import { ethers } from "ethers"
-import { CONTRACT_ADDRESS_MAP } from "../chains"
+import { CHAIN_OPTIONS, CONTRACT_ADDRESS_MAP } from "../chains"
 import { ContestMetadata, Player, RequestData } from "../types"
 import { siteConfig } from "@/util/site-config"
 
-export function requireContractAddress(network: string) {
+export function requireContractAddress(chainId: string) {
+	const network = CHAIN_OPTIONS.find((chain) => chain.chainId === chainId)
 	const address = requireValue(
-		CONTRACT_ADDRESS_MAP[network],
-		"Master app contract address not found for network: " + network
+		CONTRACT_ADDRESS_MAP[chainId],
+		"Master app contract address not found for active chainId: " +
+			chainId +
+			" - " +
+			(network?.displayName || "Unknown network")
 	)
 	return address
 }
