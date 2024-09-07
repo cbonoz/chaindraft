@@ -43,6 +43,7 @@ export interface ContestMetadata {
 	creationTime: number
 	closeTime: number
 	passcodeHash?: string
+	allowedTeams: string[]
 	owner: string
 }
 

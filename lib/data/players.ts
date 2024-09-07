@@ -1,6 +1,14 @@
 import { Player } from "../types"
 import { OFFENSE_PLAYERS } from "./data"
 
+export const getPlayersFromIds = (playerIds: string[]): Player[] => {
+	return playerIds
+		.map((id) => {
+			return OFFENSE_PLAYERS.find((player) => player.smart_id === id)
+		})
+		.filter((player) => player !== undefined) as Player[]
+}
+
 // group players by position
 export const GROUPED_PLAYERS: Map<
 	String,

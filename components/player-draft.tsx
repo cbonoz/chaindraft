@@ -67,17 +67,20 @@ const PlayerDraft = ({ contestId, contestData }: Props) => {
 
 	if (isTerminalState) {
 		return (
-			<CompletedDraft
-				contestData={{} as any}
-				draftedPlayers={draftedPlayers}
-				reset={reset}
-				contestId={contestId}
-			/>
+			<div className="w-full max-w-[1200px] min-w-[800px] mx-auto">
+				<CompletedDraft
+					contestData={contestData}
+					draftedPlayers={draftedPlayers}
+					reset={reset}
+					contestId={contestId}
+				/>
+			</div>
 		)
 	}
 
 	return (
 		<div className="w-full max-w-[1200px] min-w-[800px] mx-auto">
+			<div>Contest is open</div>
 			<Progress
 				value={(currentIndex / siteConfig.numberDraftPlayers) * 100}
 				className="mb-8"

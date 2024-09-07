@@ -53,6 +53,11 @@ const CreateContest = () => {
 			return
 		}
 
+		if (!signer) {
+			setError("Please connect your wallet")
+			return
+		}
+
 		try {
 			setLoading(true)
 			const res = await createContest(

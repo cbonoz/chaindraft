@@ -8,6 +8,7 @@ import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { getContestInfo } from "@/lib/contract/commands"
 import LineupResults from "@/components/lineup-results"
+import { isParticipant } from "@/lib/utils"
 
 interface Params {
 	contestId: string
@@ -71,44 +72,43 @@ export default function ContestPage({ params }: { params: Params }) {
 		return <div>Please connect your wallet</div>
 	}
 
-	const invalid = !loading && !data
+	const invalid = !loading && !data?.name
 	const cancelled = data?.cancelled !== true
+	const showLineups = isParticipant(data, address)
 	const showDraft = Boolean(
-		cancelled && data?.closeTime && data?.closeTime > Date.now()
+		cancelled && data?.closeTime && data?.closeTime > Date.now() && !showLineups
 	)
-	const showLineups = Boolean(data?.closeTime && data?.closeTime < Date.now())
 
 	const getTitle = () => {
+		const contestName = data?.name || "Fantasy Contest"
 		if (invalid || error) {
 			return (
 				<span>
 					<span className="text-red-500">Error finding contest</span>
 				</span>
 			)
-		}
-		if (showDraft) {
-			return data?.name || "Fantasy Contest"
+		} else if (showDraft) {
+			return `Draft your lineup for ${contestName}`
+		} else if (showLineups) {
+			return `Lineups for ${contestName}`
 		}
 		return "Fantasy Contest"
 	}
 
 	return (
 		// center align
-		<div className="flex flex-col items-center justify-center mt-8">
-			<BasicCard
-				title={getTitle()}
-				// description="Find and verify a fantasy contest using your wallet."
-			>
+		<div className="flex flex-col items-center justify-center m-8 px-4">
+			<BasicCard title={getTitle()}>
 				{invalid && (
 					<div>
 						<p>
-							This contract may not exist or may be on another network, double
-							check your currently connected network
+							This contest page may not exist or may be on another network,
+							double check your currently connected network.
 						</p>
 					</div>
 				)}
 
-				{cancelled && !invalid && !showDraft && !showLineups && (
+				{cancelled && !invalid && (
 					<div>
 						<p>This contest has been cancelled</p>
 					</div>

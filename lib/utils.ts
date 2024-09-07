@@ -110,7 +110,9 @@ export const getNameFromUser = (user: any) => {
 }
 
 export const getReadableError = (err: any) => {
-	if (err?.info?.error?.message) {
+	if (err?.info?.error?.data?.message) {
+		return err.info.error.data.message
+	} else if (err?.info?.error?.message) {
 		return err.info.error.message
 	} else if (err.message) {
 		return err.message
@@ -160,6 +162,10 @@ export const getIpfsUrl = (cid: string) => {
 	return `https://gateway.lighthouse.storage/ipfs/${cid}`
 }
 
+export const isParticipant = (contest: ContestMetadata | undefined | null, address: string) => {
+	return contest?.lineups?.some((lineup) => lineup.owner === address)
+}
+
 export const contestArrayToObject = (
 	contestId: any,
 	arr: any[]
@@ -168,21 +174,41 @@ export const contestArrayToObject = (
 		name,
 		entryFee,
 		prizePool,
-		isActive,
+		cancelled,
 		winner,
 		creationTime,
 		closeTime,
+		allowedTeams,
 		owner,
+		lineups,
+		passcodeHash,
 	] = arr
+
+	// convert linups to array
+	const lineupsArr = Object.values(lineups).map((lineup: any) => {
+		const [playerIds, isSubmitted, submissionTime, owner, attestationId] =
+			lineup
+		return {
+			playerIds: Object.values(playerIds),
+			isSubmitted,
+			submissionTime,
+			owner,
+			attestationId,
+		}
+	})
+
 	return {
 		id: contestId,
 		name,
 		entryFee,
 		prizePool,
-		isActive,
+		cancelled,
 		winner,
 		creationTime,
 		closeTime,
+		allowedTeams,
 		owner,
+		lineups: lineupsArr,
+		passcodeHash,
 	}
 }

@@ -33,6 +33,10 @@ const NavHeader = () => {
 						<a href="/contest" className="text-green-500 hover:underline mx-4">
 							Participate
 						</a>
+						|
+						<a href="/messages" className="text-green-500 hover:underline mx-4">
+							Messages
+						</a>
 						{isAdmin && (
 							<span>
 								|

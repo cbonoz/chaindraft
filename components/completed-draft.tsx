@@ -31,7 +31,7 @@ const CompletedDraft = ({
 	const [result, setResult] = useState<any>(null)
 	const [error, setError] = useState<any>(null)
 	const ref = React.useRef<any>()
-	const { signer, activeChain } = useWeb3AuthContext()
+	const { signer, provider, activeChain } = useWeb3AuthContext()
 
 	const isOwner = contestData.owner === signer?.address
 
@@ -61,9 +61,11 @@ const CompletedDraft = ({
 			const players = Object.values(draftedPlayers).filter(
 				(player) => player !== null
 			)
+
+			const playerIds = players.map((player) => player?.smart_id)
 			const schemaEntry: SchemaEntry = {
 				name: contestData.name,
-				data: JSON.stringify({ players }),
+				data: JSON.stringify({ playerIds }),
 				timestamp: Date.now().toString(),
 				signature,
 			}
@@ -91,7 +93,7 @@ const CompletedDraft = ({
 	}
 
 	return (
-		<div className="justify-center max-w-[1200px]">
+		<div className="justify-center max-w-[1200px] mx-4 px-4">
 			{/* <Image
 				src="/logo.png"
 				alt="chaindraft"
