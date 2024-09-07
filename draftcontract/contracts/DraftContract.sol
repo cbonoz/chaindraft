@@ -7,7 +7,8 @@ contract DraftContract {
         string[5] playerIds;  // A lineup consists of 5 player IDs
         bool isSubmitted;     // Track if the lineup is submitted
         uint submissionTime;  // Timestamp when the lineup was submitted
-        address owner;        // Owner of the lineup
+        address owner;        // Owner of the lineup submission
+        string attestationId; // Attestation ID for the submission
     }
 
     // Define a contest structure
@@ -62,7 +63,8 @@ contract DraftContract {
     function submitLineup(
         uint _contestId,
         string[5] memory _playerIds,
-        string memory _passcode
+        string memory _passcode,
+        string memory _attestationId
     ) public payable {
         Contest storage contest = contests[_contestId];
         require(contest.isActive, "Contest is not active");
@@ -92,7 +94,8 @@ contract DraftContract {
             playerIds: _playerIds,
             isSubmitted: true,
             submissionTime: block.timestamp,
-            owner: msg.sender
+            owner: msg.sender,
+            attestationId: _attestationId
         }));
 
         // Increase the prize pool if there's an entry fee
@@ -140,7 +143,8 @@ contract DraftContract {
         uint closeTime,
         string memory allowedTeams,
         address owner,
-        Lineup[] memory lineups
+        Lineup[] memory lineups,
+        bytes32 passcodeHash
     ) {
         Contest storage contest = contests[_contestId];
         name = contest.name;
@@ -152,6 +156,7 @@ contract DraftContract {
         closeTime = contest.closeTime;
         allowedTeams = contest.allowedTeams;
         owner = contest.owner;
+        passcodeHash = contest.passcodeHash;
         // Return all lineups if owner else return only the player's lineup
         if (msg.sender == contest.owner) {
             lineups = contest.lineups;

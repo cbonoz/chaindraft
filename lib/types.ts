@@ -11,6 +11,19 @@ export interface SchemaItem {
 	type: string
 }
 
+// string[5] playerIds;  // A lineup consists of 5 player IDs
+// bool isSubmitted;     // Track if the lineup is submitted
+// uint submissionTime;  // Timestamp when the lineup was submitted
+// address owner;        // Owner of the lineup submission
+// string attestationId
+export interface Lineup {
+	playerIds: string[]
+	isSubmitted: boolean
+	submissionTime: number
+	owner: string
+	attestationId: string
+}
+
 // string memory name,
 // uint entryFee,
 // uint prizePool,
@@ -25,16 +38,17 @@ export interface ContestMetadata {
 	entryFee: number
 	prizePool: number
 	isActive: boolean
-	attestationId?: string
+	lineups?: Lineup[]
 	winner: string
 	creationTime: number
 	closeTime: number
+	passcodeHash?: string
 	owner: string
 }
 
 export interface SchemaEntry {
 	name: string
-	lineup: string
+	data: string
 	timestamp: string
 	signature: string
 }
@@ -97,7 +111,8 @@ export interface Player {
 	entry_year: string
 	rookie_year: string
 	draft_club: string
-	draft_string: string
+	draft_number?: string
+	draft_string?: string
 	college_conference: string
 	status_description_abbr: string
 	status_short_description: string
@@ -106,7 +121,8 @@ export interface Player {
 	smart_id: string
 	headshot: string
 	suffix: string
-	uniform_string: string
+	uniform_string?: string
+	uniform_number?: string
 	draft_round: string
 }
 

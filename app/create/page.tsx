@@ -1,6 +1,5 @@
 "use client"
 import CreateContest from "@/components/create-contest"
-import PlayerDraft from "@/components/player-draft"
 
 const CreatePage = () => {
 	// Get cont:

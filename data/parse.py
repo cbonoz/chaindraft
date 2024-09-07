@@ -26,7 +26,7 @@ def filter_and_save_players(csv_file_path, output_file_path):
     filtered_players_json = json.dumps(filtered_players, indent=4)
 
     # Prepare the output content with the specified prefix
-    prefix = """import { Player } from "../types"
+    prefix = """import { Player } from "@/lib/types"
 
 export const OFFENSE_PLAYERS: Array<Player> ="""
     output_content = f"{prefix} {filtered_players_json};"

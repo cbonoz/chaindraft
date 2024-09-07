@@ -1,41 +1,13 @@
 "use client"
 
 import BasicCard from "@/components/basic-card"
-import RenderObject from "@/components/render-object"
-import { Button } from "@/components/ui/button"
-import { APP_CONTRACT } from "@/lib/contract/metadata"
-import { useEthersSigner } from "@/lib/get-signer"
 import { ContestMetadata, SchemaEntry } from "@/lib/types"
-import {
-	abbreviate,
-	formatCurrency,
-	formatDate,
-	getAttestationUrl,
-	getExplorerUrl,
-	getIpfsUrl,
-} from "@/lib/utils"
-import { ReloadIcon } from "@radix-ui/react-icons"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import SignatureCanvas from "react-signature-canvas"
 
-import { createAttestation, getAttestation } from "@/lib/ethsign"
 import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
-import { getContestInfo, requireContractAddress } from "@/lib/contract/commands"
-import { CHAIN_OPTIONS, CHILIZ_TESTNET } from "@/lib/chains"
-import ViewContract from "@/components/view-contract"
-
-const RESULT_KEYS = [
-	"name",
-	"description",
-	"recipientName",
-	"recipientAddress",
-	"owner",
-	"network",
-	"attestationId",
-]
+import { getContestInfo } from "@/lib/contract/commands"
+import LineupResults from "@/components/lineup-results"
 
 interface Params {
 	contestId: string
@@ -43,9 +15,7 @@ interface Params {
 
 export default function ContestPage({ params }: { params: Params }) {
 	const [loading, setLoading] = useState(true)
-	const [signLoading, setSignLoading] = useState(false)
 	const [data, setData] = useState<ContestMetadata | undefined>()
-	const [result, setResult] = useState<any>(null)
 	const [error, setError] = useState<any>(null)
 	const ref = useRef(null)
 
@@ -87,54 +57,6 @@ export default function ContestPage({ params }: { params: Params }) {
 		}
 	}
 
-	async function signRequest() {
-		if (!data) {
-			alert("No data to sign - try another url")
-			return
-		}
-
-		let signature = ""
-		if (ref?.current) {
-			const signatureData = (ref.current as any).toDataURL() || ""
-			console.log("signatureData", signatureData)
-		}
-
-		setSignLoading(true)
-		const d: ContestMetadata = data
-
-		try {
-			const schemaEntry: SchemaEntry = {
-				name: d.name,
-				lineup: d.name,
-				timestamp: Date.now().toString(),
-				signature,
-				// signatureData,
-			}
-
-			const attestation = await createAttestation(signer, schemaEntry)
-			// const attestation = { attestationId: '1234' }
-			// await switchChain({ chainId })
-			let res = {}
-			console.log("created attestation", attestation)
-			// const res = await writeContract(config, {
-			// 	abi: APP_CONTRACT.abi,
-			// 	address: contestId,
-			// 	functionName: "validate",
-			// 	args: [attestation.attestationId],
-			// })
-
-			console.log("signRequest validate", res, attestation)
-			await fetchData()
-			alert(
-				"Transaction validated! Please wait a few moments for the blockchain to update and refresh the page."
-			)
-		} catch (error) {
-			console.log("error signing request", error)
-			setError(error)
-		}
-		setSignLoading(false)
-	}
-
 	useEffect(() => {
 		if (address) {
 			fetchData()
@@ -150,7 +72,10 @@ export default function ContestPage({ params }: { params: Params }) {
 	}
 
 	const invalid = !loading && !data
-	const showDraft = Boolean(data?.isActive)
+	const isActive = data && data.isActive
+	const showDraft = Boolean(isActive)
+	const showLineups =
+		!isActive || Boolean(data?.closeTime && data?.closeTime < Date.now())
 	const showResult = Boolean(data && !data.winner)
 
 	const getTitle = () => {
@@ -180,53 +105,16 @@ export default function ContestPage({ params }: { params: Params }) {
 						</p>
 					</div>
 				)}
-				{showResult && (
-					<div>
-						{/* <div className="text-black-500"> */}
-						<div>
-							This request was validated by{" "}
-							<Link
-								className="text-blue-500 hover:underline"
-								rel="noopener noreferrer"
-								target="_blank"
-								href={getExplorerUrl(data?.recipientAddress, currentChain)}
-							>
-								{abbreviate(data?.recipientAddress)}
-							</Link>{" "}
-							at {formatDate(data?.validatedAt)}
-						</div>
 
-						{data && (
-							<div className="mt-4">
-								<RenderObject title="Data" obj={data} keys={RESULT_KEYS} />
-							</div>
-						)}
-						{/* attentation explorer link */}
-						{data?.attestationId && (
-							<div className="my-2">
-								<Link
-									className="text-blue-500 hover:underline"
-									rel="noopener noreferrer"
-									target="_blank"
-									href={getAttestationUrl(data.attestationId)}
-								>
-									View attestation
-								</Link>
-							</div>
-						)}
+				{showDraft && data && (
+					<div>
+						<PlayerDraft contestId={contestId} contestData={data} />
 					</div>
 				)}
 
-				{showDraft && (
+				{showLineups && data && (
 					<div>
-						<PlayerDraft contestId={contestId} />
-					</div>
-				)}
-
-				{result && (
-					<div className="mt-4">
-						<h3 className="text-lg font-bold">Result</h3>
-						<p>{result}</p>
+						<LineupResults contestId={contestId} contestData={data} />
 					</div>
 				)}
 

@@ -1,10 +1,5 @@
 import { APP_CONTRACT } from "./metadata"
-import {
-	contestArrayToObject,
-	dateToMillis,
-	formatDate,
-	requireValue,
-} from "../utils"
+import { contestArrayToObject, dateToMillis, requireValue } from "../utils"
 import { ethers } from "ethers"
 import { CONTRACT_ADDRESS_MAP } from "../chains"
 import { ContestMetadata, Player, RequestData } from "../types"
@@ -27,7 +22,6 @@ export async function deployContract(signer: any) {
 	)
 
 	let contract: any = await factory.deploy()
-	// log
 	console.log("Deploying contract...")
 
 	contract = await contract.waitForDeployment()
@@ -42,7 +36,7 @@ export const createContest = async (
 ) => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
-	const submissionCloseDate = dateToMillis(data.closeDateMillis)
+	const submissionCloseDate: number = dateToMillis(data.closeDateMillis)
 
 	let allowedTeams = ""
 
@@ -66,7 +60,8 @@ export const submitLineup = async (
 	chainId: string,
 	contestId: string,
 	players: Player[],
-	passcode: any
+	passcode: any,
+	attestationId: string
 ) => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
@@ -83,7 +78,8 @@ export const submitLineup = async (
 	const result = await contract.submitLineup(
 		contestId,
 		playerIds,
-		passcode || ""
+		passcode || "",
+		attestationId
 	)
 	console.log("submitLineup", result)
 	return result

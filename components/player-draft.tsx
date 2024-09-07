@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import { Player } from "@/lib/types"
+import { ContestMetadata, Player } from "@/lib/types"
 import { GROUPED_PLAYERS } from "@/lib/data/players"
 import { Button } from "@/components/ui/button"
 import { shuffleArray } from "@/lib/utils"
@@ -13,9 +13,10 @@ import { Progress } from "./ui/progress"
 
 interface Props {
 	contestId: string
+	contestData: ContestMetadata
 }
 
-const PlayerDraft = ({ contestId }: Props) => {
+const PlayerDraft = ({ contestId, contestData }: Props) => {
 	const [draftedPlayers, setDraftedPlayers] =
 		useState<Record<string, Player | null>>(EMPTY_DRAFT)
 	const [skipsLeft, setSkipsLeft] = useState(siteConfig.maxDraftSkips)
@@ -67,6 +68,7 @@ const PlayerDraft = ({ contestId }: Props) => {
 	if (isTerminalState) {
 		return (
 			<CompletedDraft
+				contestData={{} as any}
 				draftedPlayers={draftedPlayers}
 				reset={reset}
 				contestId={contestId}

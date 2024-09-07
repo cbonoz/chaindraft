@@ -1,13 +1,9 @@
 "use client"
 
-import PlayerDraft from "@/components/player-draft"
 import { RouteButtons } from "@/components/route-buttons"
 import { ACTIVE_PLAYERS_WITH_HEADSHOTS } from "@/lib/data/players"
 import { siteConfig } from "@/util/site-config"
-import { Route } from "lucide-react"
-import Image from "next/image"
 import { useState } from "react"
-import TinderCard from "react-tinder-card"
 
 export default function Home() {
 	const onSwipe = (direction: string) => {

@@ -1,15 +1,12 @@
 import {
 	SignProtocolClient,
 	SpMode,
-	EvmChains,
 	OffChainSignType,
 	IndexService,
 	OffChainRpc,
 } from "@ethsign/sp-sdk"
 import { privateKeyToAccount } from "viem/accounts"
 import crypto from "crypto"
-
-import { arbitrumSepolia, gnosisChiado } from "viem/chains"
 import { SchemaEntry } from "./types"
 import { siteConfig } from "@/util/site-config"
 
@@ -46,8 +43,8 @@ export const createSchema = async (signer?: any) => {
 	const client = getClient(signer)
 	const data = [
 		schemaItem("name"),
-		schemaItem("lineup"),
 		schemaItem("timestamp"),
+		schemaItem("data"),
 		schemaItem("signature"),
 	]
 	const title = siteConfig.title
@@ -62,13 +59,15 @@ export const createSchema = async (signer?: any) => {
 export const createAttestation = async (signer: any, data: SchemaEntry) => {
 	const client = getClient(signer)
 	//create attestation
-	const indexingValue = `${data.request}_${data.timestamp}`
+	const indexingValue = `${data.data}_${data.timestamp}`
 	console.log("create sign request", SCHEMA_ID, indexingValue, data, signer)
 	const attestationInfo = await client.createAttestation({
 		schemaId: SCHEMA_ID,
 		data,
 		indexingValue,
 	})
+	// log
+	console.log("attestationInfo", attestationInfo)
 	return attestationInfo
 }
 

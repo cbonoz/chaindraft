@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { CHILIZ_TESTNET, CONTRACT_ADDRESS_MAP } from "@/lib/chains"
 import { deployContract } from "@/lib/contract/commands"
+import { createSchema } from "@/lib/ethsign"
 import { getExplorerUrl, getReadableError, isEmpty } from "@/lib/utils"
 import { siteConfig } from "@/util/site-config"
 import { ReloadIcon } from "@radix-ui/react-icons"
@@ -15,9 +16,24 @@ import { Chain } from "viem"
 const AdminPage = () => {
 	const [contract, setContract] = useState<any>()
 	const [error, setError] = useState<any>(null)
+	const [result, setResult] = useState<any>(null)
+	const [schemaLoading, setSchemaLoading] = useState(false)
 	const [loading, setLoading] = useState(false)
 
 	const { signer, provider, activeChain: currentChain } = useWeb3AuthContext()
+
+	const getSchemaId = async () => {
+		setSchemaLoading(true)
+		try {
+			const res = await createSchema()
+			console.log("createSchema", res)
+			setResult(res)
+		} catch (error) {
+			console.log("error creating schema", error)
+		} finally {
+			setSchemaLoading(false)
+		}
+	}
 
 	async function deployMasterContract() {
 		setLoading(true)
@@ -87,6 +103,22 @@ const AdminPage = () => {
 						>
 							View contract on {currentChain?.displayName} explorer
 						</a>
+					</div>
+				)}
+			</BasicCard>
+
+			<BasicCard
+				title="Generate Schema ID"
+				description="Generate a schema ID for universal contest submissions."
+			>
+				<Button onClick={getSchemaId} disabled={schemaLoading} className="mt-3">
+					{schemaLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+					Get Schema ID
+				</Button>
+
+				{result && (
+					<div className="my-2">
+						<RenderObject title="Result" obj={result} />
 					</div>
 				)}
 			</BasicCard>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Player } from "@/lib/types"
+import { ContestMetadata, Player, SchemaEntry } from "@/lib/types"
 import React, { useState } from "react"
 import PlayerCard from "./player-card"
 import Image from "next/image"
@@ -11,19 +11,20 @@ import ReactSignatureCanvas from "react-signature-canvas"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { submitLineup } from "@/lib/contract/commands"
 import { getReadableError } from "@/lib/utils"
+import { createAttestation } from "@/lib/ethsign"
 
 interface Props {
 	draftedPlayers: Record<string, Player | null>
 	reset: () => void
 	contestId: string
-	passcodeHash?: string
+	contestData: ContestMetadata
 }
 
 const CompletedDraft = ({
 	draftedPlayers,
 	reset,
 	contestId,
-	passcodeHash,
+	contestData,
 }: Props) => {
 	const [loading, setLoading] = useState(false)
 	const [passcode, setPasscode] = useState("")
@@ -47,20 +48,37 @@ const CompletedDraft = ({
 			return
 		}
 		setLoading(true)
+
+		let signature = ""
+		if (ref?.current) {
+			const signatureData = (ref.current as any).toDataURL() || ""
+			console.log("signatureData", signatureData)
+		}
+
 		try {
 			const players = Object.values(draftedPlayers).filter(
 				(player) => player !== null
 			)
-			await submitLineup(
+			const schemaEntry: SchemaEntry = {
+				name: contestData.name,
+				data: JSON.stringify({ players }),
+				timestamp: Date.now().toString(),
+				signature,
+			}
+
+			const attestation = await createAttestation(signer, schemaEntry)
+			const res = await submitLineup(
 				signer,
 				activeChain?.chainId,
 				contestId,
 				players,
-				passcode
+				passcode,
+				attestation.attestationId
 			)
 			setResult({
 				success: true,
 				message: "Draft submitted successfully!",
+				...res
 			})
 		} catch (err: any) {
 			console.error(err)

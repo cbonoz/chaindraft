@@ -69,7 +69,7 @@ export const getContestUrl = (contestId: string) => {
 }
 
 // convert maybe date to millis
-export const dateToMillis = (d: Date | string | number | undefined) => {
+export const dateToMillis = (d: Date | string | number | undefined): number => {
 	if (!(d instanceof Date)) {
 		d = d ? new Date(d) : new Date()
 	}
