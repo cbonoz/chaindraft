@@ -24,6 +24,9 @@ const NavHeader = () => {
 				/>
 			</a>
 			<nav className="flex align-center justify-center align-center center align-middle justify-middle">
+				{isContestPage && (
+					<span className="justify-center mx-auto ml-2">Contest page</span>
+				)}
 				{!isContestPage && (
 					<span>
 						<a href="/create" className="text-green-500 hover:underline mx-4">

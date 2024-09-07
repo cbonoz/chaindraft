@@ -8,7 +8,8 @@ import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { getContestInfo } from "@/lib/contract/commands"
 import LineupResults from "@/components/lineup-results"
-import { isParticipant } from "@/lib/utils"
+import { getReadableError, isEmpty, isParticipant } from "@/lib/utils"
+import { AlertCircle } from "lucide-react"
 
 interface Params {
 	contestId: string
@@ -41,18 +42,12 @@ export default function ContestPage({ params }: { params: Params }) {
 				currentChain?.chainId,
 				parseInt(contestId)
 			)
-
 			// convert balance and validatedAt to number from bigint
 			console.log("contractData", contractData)
 			setData(contractData)
-
-			// if (contractData.attestationId) {
-			// 	const res = await getAttestation(contractData.attestationId)
-			// 	console.log("getAttestation", res)
-			// }
 		} catch (error) {
 			console.log("error reading contract", error)
-			setError(error)
+			setError(getReadableError(error))
 		} finally {
 			setLoading(false)
 		}
@@ -72,11 +67,14 @@ export default function ContestPage({ params }: { params: Params }) {
 		return <div>Please connect your wallet</div>
 	}
 
-	const invalid = !loading && !data?.name
-	const cancelled = data?.cancelled !== true
-	const showLineups = isParticipant(data, address)
+	const invalid = !loading && isEmpty(data?.name)
+	const cancelled = data?.cancelled === true
+	const showLineups = isParticipant(data, address) && !cancelled
 	const showDraft = Boolean(
-		cancelled && data?.closeTime && data?.closeTime > Date.now() && !showLineups
+		!cancelled &&
+			data?.closeTime &&
+			data?.closeTime > Date.now() &&
+			!showLineups
 	)
 
 	const getTitle = () => {
@@ -92,7 +90,7 @@ export default function ContestPage({ params }: { params: Params }) {
 		} else if (showLineups) {
 			return `Lineups for ${contestName}`
 		}
-		return "Fantasy Contest"
+		return contestName
 	}
 
 	return (
@@ -110,7 +108,10 @@ export default function ContestPage({ params }: { params: Params }) {
 
 				{cancelled && !invalid && (
 					<div>
-						<p>This contest has been cancelled</p>
+						<span className="text-red-500 text-xl flex flex-row">
+							<AlertCircle size={24}></AlertCircle>
+							<span className="ml-1">This contest has been cancelled.</span>
+						</span>
 					</div>
 				)}
 

@@ -42,6 +42,7 @@ const CompletedDraft = ({
 	const chainId = activeChain?.chainId
 
 	async function onSubmit() {
+		setError(null)
 		console.log("Draft submitted", contestId, draftedPlayers)
 		if (!signer || !chainId) {
 			setError(
@@ -82,7 +83,6 @@ const CompletedDraft = ({
 			setResult({
 				success: true,
 				message: "Draft submitted successfully!",
-				...res,
 			})
 		} catch (err: any) {
 			console.error(err)
@@ -119,6 +119,31 @@ const CompletedDraft = ({
 			</div>
 
 			<div>
+				<input
+					type="text"
+					value={passcode}
+					onChange={(e) => setPasscode(e.target.value)}
+					placeholder="Enter passcode"
+					className="border p-2"
+				/>
+			</div>
+
+			{result?.success && (
+				<div>
+					<div className="text-green-500 mt-4">{result.message}</div>
+					{/* // View lineup by refresh */}
+					<Button
+						onClick={() => {
+							window.location.reload()
+						}}
+						className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+					>
+						View Lineup
+					</Button>
+				</div>
+			)}
+
+			<div>
 				<Button
 					onClick={onSubmit}
 					disabled={loading}
@@ -128,7 +153,7 @@ const CompletedDraft = ({
 					{loading && <ReloadIcon className="animate-spin ml-1" />}
 				</Button>
 			</div>
-			{isOwner && (
+			{/* {isOwner && (
 				<div>
 					<Button
 						onClick={reset}
@@ -138,7 +163,7 @@ const CompletedDraft = ({
 						Reset Draft
 					</Button>
 				</div>
-			)}
+			)} */}
 			{error && <div className="text-red-500 mt-4">{error}</div>}
 		</div>
 	)

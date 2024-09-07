@@ -1,7 +1,7 @@
 export const siteConfig = {
 	title: "Chaindraft",
 	description:
-		"A blockchain-powered fantasy football platform with community-driven player salaries and decentralized management.",
+		"A blockchain-powered fantasy football platform with community-driven player salaries and decentralized management",
 	isLocal: process.env.NEXT_PUBLIC_ENV === "development",
 	siteUrl: "https://vercel.chaindraft.com",
 	maxDraftSkips: 10,

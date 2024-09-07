@@ -12,8 +12,17 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog"
+
 import { Calendar } from "@/components/ui/calendar"
-import { cn, getReadableError } from "@/lib/utils"
+import { cn, getContestIdFromLogs, getReadableError } from "@/lib/utils"
 import { CalendarIcon, ReloadIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
@@ -24,6 +33,7 @@ import RenderObject from "./render-object"
 const CreateContest = () => {
 	const [data, setData] = useState<RequestData>({})
 	const [result, setResult] = useState({} as any)
+	const [modalData, setModalData] = useState({} as any)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState("")
 	const { address, signer, provider, activeChain } = useWeb3AuthContext()
@@ -66,6 +76,7 @@ const CreateContest = () => {
 				data
 			)
 			res["success"] = true
+			res["contestId"] = getContestIdFromLogs(res)
 			console.log("res", res)
 			setResult(res)
 		} catch (err: any) {
@@ -101,21 +112,38 @@ const CreateContest = () => {
 					className="min-w-[400px] p-4"
 				>
 					{hasResult && (
-						<div className="text-green-500">
-							<RenderObject
-								obj={result}
-								title={result.success ? "Success!" : "Error!"}
-							/>
-							{/* Go to contest */}
-							<Button
-								className="mt-4"
-								onClick={() => {
-									setResult({})
-									clear()
-								}}
-							>
-								Create another contest
-							</Button>
+						<div>
+							<div className="text-green-500">
+								<Dialog>
+									<DialogTrigger className="underline">
+										View Transaction Details
+									</DialogTrigger>
+									<DialogContent>
+										<DialogHeader>
+											<DialogTitle>Contest created</DialogTitle>
+											{/* word wrap */}
+											<DialogDescription className="break-all">
+												<RenderObject
+													obj={result}
+													title={result?.success ? "Success!" : "Error!"}
+												/>
+											</DialogDescription>
+										</DialogHeader>
+									</DialogContent>
+								</Dialog>
+								<br />
+								{/* Go to contest */}
+								<Button
+									className="mt-4"
+									onClick={(e) => {
+										e?.preventDefault()
+										window.open(`/contest/${result.contestId}`, "_blank")
+									}}
+								>
+									Go to contest
+								</Button>
+							</div>
+							<div>Share the link to the contest with your friends.</div>
 						</div>
 					)}
 					{!hasResult && (

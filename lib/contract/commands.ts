@@ -55,8 +55,11 @@ export const createContest = async (
 		submissionCloseDate,
 		allowedTeams
 	)
-	console.log("createContest", result)
-	return result
+	// Wait for the transaction to be mined
+	const receipt = await result.wait()
+
+	console.log("Create contest receipt:", receipt) // Assuming it's a BigNumber
+	return receipt
 }
 
 export const submitLineup = async (
@@ -85,19 +88,50 @@ export const submitLineup = async (
 		passcode || "",
 		attestationId
 	)
+
 	console.log("submitLineup", result)
+
+	// await
+	await result.wait()
+	return result
+}
+
+export const startContest = async (
+	signer: any,
+	chainId: string,
+	contestId: string
+) => {
+	const address = requireContractAddress(chainId)
+	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
+	const result = await contract.startContest(contestId)
+	console.log("startContest", result)
+	await result.wait()
+	return result
+}
+
+export const cancelContest = async (
+	signer: any,
+	chainId: string,
+	contestId: string
+) => {
+	const address = requireContractAddress(chainId)
+	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
+	const result = await contract.cancelContest(contestId)
+	console.log("cancelContest", result)
+	await result.wait()
 	return result
 }
 
 export const setWinner = async (
 	signer: any,
 	chainId: string,
-	contestId: number,
+	contestId: string,
 	winner: string
 ) => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
 	const result = await contract.setWinner(contestId, winner)
+	await result.wait()
 	console.log("setWinner", result)
 	return result
 }

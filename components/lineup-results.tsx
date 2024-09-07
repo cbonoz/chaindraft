@@ -2,11 +2,17 @@
 
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { ContestMetadata } from "@/lib/types"
-import { getAttestationUrl, getReadableError, isEmpty } from "@/lib/utils"
+import {
+	getAttestationUrl,
+	getReadableError,
+	isEmpty,
+	isZeroAddress,
+} from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { useState } from "react"
 import DisplayLineup from "./display-lineup"
+import { cancelContest, startContest } from "@/lib/contract/commands"
 
 type Props = {
 	contestId: string
@@ -28,12 +34,17 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 
 	const winnerLineup = lineups.find((l) => l.owner === winner)
 
-	const showDeclareWinner = !winner && isOwner
+	const showDeclareWinner = isZeroAddress(winner) && isOwner && hasStarted
 
-	async function startContest() {
+	async function start() {
+		if (!signer || !chainId) {
+			setError("Please connect your wallet")
+			return
+		}
 		setLoading(true)
+
 		try {
-			// startContest(contestId)
+			await startContest(signer, chainId, contestId)
 		} catch (error) {
 			console.error("Error starting contest", error)
 			setError(getReadableError(error))
@@ -42,48 +53,35 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 		}
 	}
 
-	async function cancelContest() {
+	async function cancel() {
+		if (!chainId || !signer) {
+			setError("Please connect your wallet")
+			return
+		}
+
 		setLoading(true)
 		try {
-			// startContest(contestId)
+			await cancelContest(signer, chainId, contestId)
 		} catch (error) {
-			console.error("Error starting contest", error)
+			console.error("Error cancelling contest", error)
 			setError(getReadableError(error))
 		} finally {
 			setLoading(false)
 		}
-	}
-
-	if (showDeclareWinner) {
-		return (
-			<div>
-				<div>As the owner of this contest, you can</div>
-				<h2 className="text-2xl font-bold">Declare winner</h2>
-				<p>Declare the winner of this contest. This action is irreversible.</p>
-				<button
-					className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded cursor-pointer pointer"
-					onClick={() => {
-						// declareWinner(contestId)
-					}}
-				>
-					Declare winner
-				</button>
-			</div>
-		)
 	}
 
 	return (
-		<div>
+		<div className="min-w-[800px] max-w-[1200px]">
 			{isOwner && (
 				<div>
 					<div>
-						<p>You are the owner of this contest</p>
 						{!hasStarted && !cancelled && (
 							<div>
 								<Button
 									variant={"secondary"}
 									size={"lg"}
-									onClick={startContest}
+									onClick={start}
+									disabled={loading}
 								>
 									Freeze contest
 								</Button>
@@ -91,7 +89,8 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 								<Button
 									size={"lg"}
 									variant={"destructive"}
-									onClick={cancelContest}
+									onClick={cancel}
+									disabled={loading}
 								>
 									Cancel contest
 								</Button>
@@ -106,16 +105,24 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 			{lineups.length === 0 && <p>No lineups submitted</p>}
 			{!winnerLineup && !isEmpty(lineups) && (
 				<div>
-					<div>Active lineups</div>
+					<div className="text-2xl mt-4">Active lineups</div>
 					{lineups.map((lineup) => (
-						<DisplayLineup key={lineup.owner} lineup={lineup} />
+						<DisplayLineup
+							key={lineup.owner}
+							lineup={lineup}
+							contestData={contestData}
+							contestId={contestId}
+							showDeclareWinner={showDeclareWinner}
+						/>
 					))}
 				</div>
 			)}
 
 			{winnerLineup && (
 				<div>
-					<h2 className="text-2xl font-bold">Winner</h2>
+					<h2 className="text-2xl font-bold text-green-500">
+						This contest has ended!
+					</h2>
 					<div className="my-2">
 						Winner: {winnerLineup.owner} - Attestation:{" "}
 						{winnerLineup.attestationId}

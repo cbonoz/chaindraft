@@ -12,25 +12,29 @@ interface Props {
 	color?: string
 }
 
-// display only
-
-const PlayerCard = ({ player, width, position, reduced, color }: Props) => {
-	const dimensions = width ? `w-${width} h-${width}` : "w-40 h-40"
+const PlayerCard = ({
+	player,
+	width = 40,
+	position,
+	reduced,
+	color,
+}: Props) => {
+	const dimensions = `w-${width} h-${width}`
 	const themeColor = color || "yellow"
-	const largerSize = width ? width * 1.6 : 64
+	const largerSize = width * 1.6 // Calculate larger card size
 
 	return (
-		<div
-			className={`w-${largerSize} p-4 border rounded-lg bg-yellow-100 shadow-lg flex flex-col items-center text-center`}
+		<span
+			className={`w-${largerSize} p-4 border rounded-lg bg-yellow-100 shadow-lg flex flex-col items-center text-center max-w-[200px]`}
 		>
 			{!isEmpty(position) && <span>{position}</span>}
-			<div className={`relative ${dimensions} mb-4`}>
+			<div className={`relative w-24 h-24 mb-2`}>
 				<Image
 					src={player.headshot || DEFAULT_PLAYER_IMAGE}
 					alt={player.display_name}
 					layout="fill"
 					objectFit="cover"
-					className="rounded-full border-4 border-yellow-600"
+					className="rounded-full border-4 border-blue-500"
 				/>
 			</div>
 			<div className="text-xl font-bold mb-2 text-yellow-900">
@@ -55,7 +59,7 @@ const PlayerCard = ({ player, width, position, reduced, color }: Props) => {
 					</div>
 				</div>
 			)}
-		</div>
+		</span>
 	)
 }
 

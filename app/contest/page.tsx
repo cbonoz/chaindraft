@@ -13,8 +13,8 @@ const Sign = () => {
 	return (
 		<div className="flex flex-row items-center justify-center mt-8">
 			<BasicCard
-				title="Find request"
-				description="Find and verify a fantasy contest using your wallet."
+				title="Find contest"
+				description="Find and participate in a fantasy contest using your wallet."
 				className="min-w-[400px] p-4"
 			>
 				<Input
@@ -26,7 +26,7 @@ const Sign = () => {
 				<Button
 					className="mt-4"
 					onClick={() => {
-						console.log("Sign request")
+						console.log("Go to contest")
 						router.push(`/contest/${contestId}`)
 					}}
 				>

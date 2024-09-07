@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
 import { CustomChainConfig } from "@web3auth/base"
-import { ethers } from "ethers"
+import { BigNumberish, ContractTransactionReceipt, ethers } from "ethers"
 import { ContestMetadata } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
@@ -80,6 +80,21 @@ export const isContestUrl = (url: string) => {
 	return url.includes("/contest/")
 }
 
+export const isZeroAddress = (address: string) => {
+	if (isEmpty(address)) {
+		return true
+	}
+	// check if address is only zeroes
+	return /^0x0*$/.test(address)
+}
+
+export const getContestIdFromLogs = (receipt: ContractTransactionReceipt) => {
+	const logs = receipt?.logs || []
+	const log = logs.find((log: any) => log.eventName === "ContestCreated")
+	const contestIdBigNumber: BigNumberish = (log as any)?.args?.[0]
+	return contestIdBigNumber.toString()
+}
+
 export const requireValue = (value: any, errMessage: string) => {
 	if (!value) {
 		throw new Error(errMessage)
@@ -110,6 +125,10 @@ export const getNameFromUser = (user: any) => {
 }
 
 export const getReadableError = (err: any) => {
+	return abbreviate(getReadableErrorInternal(err), 100)
+}
+
+export const getReadableErrorInternal = (err: any) => {
 	if (err?.info?.error?.data?.message) {
 		return err.info.error.data.message
 	} else if (err?.info?.error?.message) {
@@ -162,7 +181,10 @@ export const getIpfsUrl = (cid: string) => {
 	return `https://gateway.lighthouse.storage/ipfs/${cid}`
 }
 
-export const isParticipant = (contest: ContestMetadata | undefined | null, address: string) => {
+export const isParticipant = (
+	contest: ContestMetadata | undefined | null,
+	address: string
+) => {
 	return contest?.lineups?.some((lineup) => lineup.owner === address)
 }
 

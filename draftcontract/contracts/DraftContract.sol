@@ -118,9 +118,11 @@ contract DraftContract {
     // End the contest and set the winner
     function setWinner(uint _contestId, address _winner) public {
         Contest storage contest = contests[_contestId];
-        require(!contest.cancelled, "Contest is not active");
+        require(!contest.cancelled, "Contest has been cancelled");
         require(msg.sender == contest.owner, "Only the contest owner can set the winner");
         require(isParticipant(_contestId, _winner), "The provided address is not a participant");
+        // Make sure contest has started
+        require(block.timestamp > contest.closeTime, "Contest has started yet");
 
         // Assign the winner
         contest.winner = _winner;
@@ -196,6 +198,8 @@ contract DraftContract {
         require(msg.sender == contest.owner, "Only the contest owner can start the contest");
         // check not already cancelled
         require(!contest.cancelled, "Contest is cancelled");
+        // need at least 2 participants
+        require(contest.lineups.length >= 2, "Need at least 2 participants");
         contest.closeTime = block.timestamp;
         emit ContestStarted(_contestId, msg.sender);
     }
