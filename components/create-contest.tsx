@@ -84,10 +84,11 @@ const CreateContest = () => {
 		<div className="w-full max-w-[1000px]">
 			<div className="flex flex-row items-center justify-center mt-8">
 				<BasicCard
-					title="Create a contest"
+					title="Create new fantasy contest"
 					description={
 						<span>
-							Create a new contest and invite your friends to join.
+							Create a new contest and invite your friends and family to
+							participate. You will be the admin of the contest.
 							<br />
 							Network: {activeChain?.displayName || "Ethereum"}
 						</span>

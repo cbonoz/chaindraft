@@ -170,9 +170,10 @@ contract DraftContract {
         owner = contest.owner;
         passcodeHash = contest.passcodeHash;
         // Return all lineups if owner else return only the player's lineup
-        if (msg.sender == contest.owner) {
+        if (msg.sender == contest.owner || block.timestamp > contest.closeTime) {
             lineups = contest.lineups;
         } else {
+            // Return only the player's lineup
             for (uint i = 0; i < contest.lineups.length; i++) {
                 if (contest.lineups[i].owner == msg.sender) {
                     lineups = new Lineup[](1);

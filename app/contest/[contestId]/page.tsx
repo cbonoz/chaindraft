@@ -72,16 +72,18 @@ export default function ContestPage({ params }: { params: Params }) {
 	}
 
 	const invalid = !loading && !data
-	const isActive = data && data.isActive
-	const showDraft = Boolean(isActive)
-	const showLineups =
-		!isActive || Boolean(data?.closeTime && data?.closeTime < Date.now())
-	const showResult = Boolean(data && !data.winner)
+	const cancelled = data?.cancelled !== true
+	const showDraft = Boolean(
+		cancelled && data?.closeTime && data?.closeTime > Date.now()
+	)
+	const showLineups = Boolean(data?.closeTime && data?.closeTime < Date.now())
 
 	const getTitle = () => {
-		if (showResult) {
+		if (invalid || error) {
 			return (
-				<span className="text-green-500">This request has been validated!</span>
+				<span>
+					<span className="text-red-500">Error finding contest</span>
+				</span>
 			)
 		}
 		if (showDraft) {
@@ -103,6 +105,12 @@ export default function ContestPage({ params }: { params: Params }) {
 							This contract may not exist or may be on another network, double
 							check your currently connected network
 						</p>
+					</div>
+				)}
+
+				{cancelled && !invalid && !showDraft && !showLineups && (
+					<div>
+						<p>This contest has been cancelled</p>
 					</div>
 				)}
 

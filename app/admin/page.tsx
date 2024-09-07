@@ -16,7 +16,9 @@ import { Chain } from "viem"
 const AdminPage = () => {
 	const [contract, setContract] = useState<any>()
 	const [error, setError] = useState<any>(null)
-	const [result, setResult] = useState<any>(null)
+	const [result, setResult] = useState<any>({
+		schemaId: process.env.NEXT_PUBLIC_SCHEMA_ID,
+	})
 	const [schemaLoading, setSchemaLoading] = useState(false)
 	const [loading, setLoading] = useState(false)
 
@@ -56,13 +58,15 @@ const AdminPage = () => {
 		CONTRACT_ADDRESS_MAP[currentChain?.chainId || CHILIZ_TESTNET.chainId]
 
 	return (
-		<div className="flex flex-row items-center justify-center mt-8">
+		<div className="flex flex-col items-center justify-center mt-8">
+			<h1 className="text-2xl font-bold my-4 text-center">Admin Controls</h1>
 			<BasicCard title={`Deploy ${siteConfig.title} master contract`}>
 				{masterAddress && (
-					<p>
-						Master contract address: {masterAddress} (
+					<span>
+						Master contract address:{" "}
+						<span className="font-bold">{masterAddress}</span> (
 						{currentChain?.displayName})
-					</p>
+					</span>
 				)}
 				{!masterAddress && (
 					<p>Master contract address not set ({currentChain?.displayName})</p>
@@ -108,17 +112,20 @@ const AdminPage = () => {
 			</BasicCard>
 
 			<BasicCard
+				className="mt-8"
 				title="Generate Schema ID"
-				description="Generate a schema ID for universal contest submissions."
+				description="Generate a schema ID for user attestations on contest submissions"
 			>
 				<Button onClick={getSchemaId} disabled={schemaLoading} className="mt-3">
-					{schemaLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+					{schemaLoading && (
+						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+					)}
 					Get Schema ID
 				</Button>
 
 				{result && (
 					<div className="my-2">
-						<RenderObject title="Result" obj={result} />
+						<RenderObject title="Schema Created" obj={result} />
 					</div>
 				)}
 			</BasicCard>

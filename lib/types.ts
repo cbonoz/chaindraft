@@ -37,7 +37,7 @@ export interface ContestMetadata {
 	name: string
 	entryFee: number
 	prizePool: number
-	isActive: boolean
+	cancelled: boolean
 	lineups?: Lineup[]
 	winner: string
 	creationTime: number

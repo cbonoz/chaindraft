@@ -33,6 +33,8 @@ const CompletedDraft = ({
 	const ref = React.useRef<any>()
 	const { signer, activeChain } = useWeb3AuthContext()
 
+	const isOwner = contestData.owner === signer?.address
+
 	const players = Object.values(draftedPlayers).filter(
 		(player) => player !== null
 	)
@@ -78,7 +80,7 @@ const CompletedDraft = ({
 			setResult({
 				success: true,
 				message: "Draft submitted successfully!",
-				...res
+				...res,
 			})
 		} catch (err: any) {
 			console.error(err)
@@ -118,21 +120,23 @@ const CompletedDraft = ({
 				<Button
 					onClick={onSubmit}
 					disabled={loading}
-					className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+					className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded"
 				>
 					Submit Draft
 					{loading && <ReloadIcon className="animate-spin ml-1" />}
 				</Button>
 			</div>
-			<div>
-				<Button
-					onClick={reset}
-					disabled={loading}
-					className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
-				>
-					Reset Draft
-				</Button>
-			</div>
+			{isOwner && (
+				<div>
+					<Button
+						onClick={reset}
+						disabled={loading}
+						className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
+					>
+						Reset Draft
+					</Button>
+				</div>
+			)}
 			{error && <div className="text-red-500 mt-4">{error}</div>}
 		</div>
 	)

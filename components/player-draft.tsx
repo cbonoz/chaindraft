@@ -77,7 +77,7 @@ const PlayerDraft = ({ contestId, contestData }: Props) => {
 	}
 
 	return (
-		<div className="w-full max-w-[1200px]">
+		<div className="w-full max-w-[1200px] min-w-[800px] mx-auto">
 			<Progress
 				value={(currentIndex / siteConfig.numberDraftPlayers) * 100}
 				className="mb-8"
