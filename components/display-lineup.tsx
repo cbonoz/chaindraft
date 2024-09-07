@@ -133,7 +133,9 @@ const DisplayLineup = ({
 				{/* send message to owner */}
 				{!isSelf && (
 					<div>
-						<label htmlFor="message">Message owner</label>
+						<label htmlFor="message">
+							Send {abbreviate(ownerAddress)} a message:
+						</label>
 						<Input
 							type="text"
 							name="message"
@@ -150,6 +152,8 @@ const DisplayLineup = ({
 						</Button>
 					</div>
 				)}
+				{/* show error */}
+				{error && <div className="text-red-500 mt-4">{error}</div>}
 			</div>
 		</div>
 	)

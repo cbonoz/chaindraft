@@ -8,7 +8,12 @@ import PlayerDraft from "@/components/player-draft"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { getContestInfo } from "@/lib/contract/commands"
 import LineupResults from "@/components/lineup-results"
-import { getReadableError, isEmpty, isParticipant } from "@/lib/utils"
+import {
+	formatDate,
+	getReadableError,
+	isEmpty,
+	isParticipant,
+} from "@/lib/utils"
 import { AlertCircle } from "lucide-react"
 
 interface Params {
@@ -29,6 +34,8 @@ export default function ContestPage({ params }: { params: Params }) {
 		signer,
 		provider,
 	} = useWeb3AuthContext()
+
+	const submissionsClosed = data?.closeTime && data?.closeTime < Date.now()
 
 	async function fetchData() {
 		if (!signer || !currentChain) {
@@ -112,6 +119,14 @@ export default function ContestPage({ params }: { params: Params }) {
 							<AlertCircle size={24}></AlertCircle>
 							<span className="ml-1">This contest has been cancelled.</span>
 						</span>
+					</div>
+				)}
+
+				{!invalid && !submissionsClosed && (
+					<div>
+						<div className="mt-2">
+							Contest start date: {formatDate(Number(data?.closeTime), true)}
+						</div>
 					</div>
 				)}
 

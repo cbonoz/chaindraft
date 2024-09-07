@@ -3,6 +3,7 @@
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { ContestMetadata } from "@/lib/types"
 import {
+	formatDate,
 	getAttestationUrl,
 	getExplorerUrl,
 	getReadableError,
@@ -14,6 +15,7 @@ import { Button } from "./ui/button"
 import { useState } from "react"
 import DisplayLineup from "./display-lineup"
 import { cancelContest, startContest } from "@/lib/contract/commands"
+import { Separator } from "@radix-ui/react-select"
 
 type Props = {
 	contestId: string
@@ -46,6 +48,7 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 
 		try {
 			await startContest(signer, chainId, contestId)
+			window?.location?.reload()
 		} catch (error) {
 			console.error("Error starting contest", error)
 			setError(getReadableError(error))
@@ -63,6 +66,7 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 		setLoading(true)
 		try {
 			await cancelContest(signer, chainId, contestId)
+			window?.location?.reload()
 		} catch (error) {
 			console.error("Error cancelling contest", error)
 			setError(getReadableError(error))
@@ -71,50 +75,36 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 		}
 	}
 
+	const notStartedAndNotOwner = !hasStarted && !isOwner
+
 	return (
 		<div className="min-w-[800px] max-w-[1200px]">
-			{isOwner && (
-				<div>
-					<div>
-						{!hasStarted && !cancelled && (
-							<div>
-								<Button
-									variant={"secondary"}
-									size={"lg"}
-									onClick={start}
-									disabled={loading}
-								>
-									Freeze contest
-								</Button>
-								&nbsp;
-								<Button
-									size={"lg"}
-									variant={"destructive"}
-									onClick={cancel}
-									disabled={loading}
-								>
-									Cancel contest
-								</Button>
-							</div>
-						)}
-					</div>
-
-					{error && <div className="text-red-500 mt-4">{error}</div>}
-				</div>
+			{hasStarted && !winnerLineup && (
+				<div className="font-bold">Submissions have closed</div>
 			)}
-
+			{cancelled && <div>This contest has been cancelled</div>}
 			{lineups.length === 0 && <p>No lineups submitted</p>}
 			{!winnerLineup && !isEmpty(lineups) && (
 				<div>
-					<div className="text-2xl mt-4">Active lineups</div>
-					{lineups.map((lineup) => (
-						<DisplayLineup
-							key={lineup.owner}
-							lineup={lineup}
-							contestData={contestData}
-							contestId={contestId}
-							showDeclareWinner={showDeclareWinner}
-						/>
+					<div className="text-2xl my-4">Submitted lineups</div>
+					{notStartedAndNotOwner && (
+						<div className="text-sm italic">
+							Submissions have not been closed yet. Other lineups will be
+							revealed after the contest starts.
+						</div>
+					)}
+					{lineups.map((lineup, i) => (
+						<div>
+							<hr className="my-4" />
+							<div className="text-lg">Lineup {i + 1}</div>
+							<DisplayLineup
+								key={lineup.owner}
+								lineup={lineup}
+								contestData={contestData}
+								contestId={contestId}
+								showDeclareWinner={showDeclareWinner}
+							/>
+						</div>
 					))}
 				</div>
 			)}
@@ -141,6 +131,37 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 					</Link>
 				</div>
 			)}
+
+			{isOwner && !hasStarted && !cancelled && (
+				<div className="mt-4">
+					<div className="text-med mb-2 border-top">
+						As the contest owner, you can:
+					</div>
+					<div>
+						<Button
+							variant={"secondary"}
+							size={"lg"}
+							onClick={start}
+							disabled={loading}
+						>
+							Close submissions
+						</Button>
+						&nbsp;
+						<Button
+							size={"lg"}
+							variant={"destructive"}
+							onClick={cancel}
+							disabled={loading}
+						>
+							Cancel contest
+						</Button>
+						<div className="text-sm italics italic">
+							Note submissions will close automatically when the contest starts.
+						</div>
+					</div>
+				</div>
+			)}
+			{error && <div className="text-red-500 mt-4">{error}</div>}
 		</div>
 	)
 }

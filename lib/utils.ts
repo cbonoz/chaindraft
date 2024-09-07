@@ -80,7 +80,7 @@ export const isContestUrl = (url: string) => {
 	return url.includes("/contest/")
 }
 
-export const isZeroAddress = (address: string) => {
+export const isZeroAddress = (address: string | undefined) => {
 	if (isEmpty(address)) {
 		return true
 	}
@@ -146,6 +146,10 @@ export const getReadableErrorInternal = (err: any) => {
 			"Unknown Error") + ""
 	if (errorMessage.indexOf("network changed")) {
 		return "Network changed. Please ensure you are connected to the Theta network."
+	} else if (errorMessage.indexOf("User denied transaction signature")) {
+		return "User denied transaction signature"
+	} else if (errorMessage.indexOf("not on the network")) {
+		return "User is not on the network. Ask the user to join on XMTP!"
 	}
 	return errorMessage
 }

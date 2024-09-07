@@ -10,8 +10,9 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 import ReactSignatureCanvas from "react-signature-canvas"
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { submitLineup } from "@/lib/contract/commands"
-import { getReadableError } from "@/lib/utils"
+import { getReadableError, isZeroAddress } from "@/lib/utils"
 import { createAttestation } from "@/lib/ethsign"
+import { createIdentity } from "@/lib/playerchat/xmtp"
 
 interface Props {
 	draftedPlayers: Record<string, Player | null>
@@ -59,6 +60,8 @@ const CompletedDraft = ({
 		}
 
 		try {
+			await createIdentity(signer)
+
 			const players = Object.values(draftedPlayers).filter(
 				(player) => player !== null
 			)
@@ -117,17 +120,17 @@ const CompletedDraft = ({
 				<div className="text-med font-bold">Sign here</div>
 				<ReactSignatureCanvas ref={ref} />
 			</div>
-
-			<div>
-				<input
-					type="text"
-					value={passcode}
-					onChange={(e) => setPasscode(e.target.value)}
-					placeholder="Enter passcode"
-					className="border p-2"
-				/>
-			</div>
-
+			{!isZeroAddress(contestData?.passcodeHash) && (
+				<div>
+					<input
+						type="text"
+						value={passcode}
+						onChange={(e) => setPasscode(e.target.value)}
+						placeholder="Enter passcode"
+						className="border p-2"
+					/>
+				</div>
+			)}
 			{result?.success && (
 				<div>
 					<div className="text-green-500 mt-4">{result.message}</div>
@@ -142,17 +145,18 @@ const CompletedDraft = ({
 					</Button>
 				</div>
 			)}
-
-			<div>
-				<Button
-					onClick={onSubmit}
-					disabled={loading}
-					className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded"
-				>
-					Submit Draft
-					{loading && <ReloadIcon className="animate-spin ml-1" />}
-				</Button>
-			</div>
+			{!result?.success && (
+				<div>
+					<Button
+						onClick={onSubmit}
+						disabled={loading}
+						className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded"
+					>
+						Submit Draft
+						{loading && <ReloadIcon className="animate-spin ml-1" />}
+					</Button>
+				</div>
+			)}
 			{/* {isOwner && (
 				<div>
 					<Button

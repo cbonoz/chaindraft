@@ -2,8 +2,13 @@ import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js"
 // Create the client with a `Signer` from your application
 
 type Env = "dev" | "production" | "local"
-const xmtpEnv = process.env.NEXT_PUBLIC_XMTP_ENV || "dev"
+const xmtpEnv = process.env.NEXT_PUBLIC_XMTP_ENV || "production"
 const xmtpEnvOption = { env: xmtpEnv as Env }
+
+export const createIdentity = async (signer: any) => {
+	const xmtp = await Client.create(signer, xmtpEnvOption)
+	return xmtp
+}
 
 export const createConversation = async (
 	signer: any,
