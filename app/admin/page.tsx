@@ -77,7 +77,11 @@ const AdminPage = () => {
 					{currentChain?.displayName || ""} blockchain.
 				</div>
 
-				<Button onClick={deployMasterContract} disabled={loading}>
+				<Button
+					onClick={deployMasterContract}
+					disabled={loading}
+					variant={"secondary"}
+				>
 					Deploy master contract
 					{loading && (
 						<span className="animate-spin ml-1">
@@ -116,7 +120,12 @@ const AdminPage = () => {
 				title="Generate Schema ID"
 				description="Generate a schema ID for user attestations on contest submissions"
 			>
-				<Button onClick={getSchemaId} disabled={schemaLoading} className="mt-3">
+				<Button
+					onClick={getSchemaId}
+					disabled={schemaLoading}
+					className="mt-3"
+					variant={"secondary"}
+				>
 					{schemaLoading && (
 						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
 					)}

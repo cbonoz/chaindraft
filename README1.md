@@ -39,19 +39,19 @@ Pain points:
 - **Chiliz**: A blockchain-based fintech platform that allows fans to buy, trade, and execute voting rights in their favorite sports teams. In the context of BlockFantasy, Chiliz can be used for fan engagement and rewards, offering unique experiences and merchandise. Earn fan tokens for giving votes.
 
 Link to master contract (testnet):
-Example contest on Chiliz network:
+Example contest on Chiliz network: https://chaindraft.vercel.app/contest/1
 
 - **Lit Protocol**: Used for secure and decentralized access control, ensuring that only authorized users can access specific features or data within the app. It can also be used for encrypting sensitive user information. - User Identity / Proof of humanity / KYC at time of submission to avoid bot submissions to contests.
 - **Web3Auth**: Provides a user-friendly interface for users to connect their wallets to the Chaindraft application. Each chain config is embedded and selectable in the app, and authentication state is saved/preserved upon refresh. Providers from each wallet are used to execute transactions for each contest smart contract entry.
 - **Fhenix**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
-Link to master contract (testnet):
-Example contest on Fhenix network:
+Link to master contract (testnet): https://explorer.helium.fhenix.zone/address/0x6C97D08dc8F0b911A171AbdF9612CB78135197b6
+Example contest on Fhenix network: https://chaindraft.vercel.app/contest/1
 
 - **Morph**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
 Link to master Morph contract (testnet):
-Example contest on Morph network:
+Example contest on Morph network: https://chaindraft.vercel.app/contest/1
 
 - **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. After a contest starts and XMTP Chat becomes available on the contest page for users to discuss live - including the outcome. A unique chat is automatically created for each contest.
 <!-- - **Tableland/Basin**: Upload new images via s3 -->
