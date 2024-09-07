@@ -4,6 +4,7 @@ import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { ContestMetadata } from "@/lib/types"
 import {
 	getAttestationUrl,
+	getExplorerUrl,
 	getReadableError,
 	isEmpty,
 	isZeroAddress,
@@ -124,8 +125,11 @@ const LineupResults = ({ contestId, contestData }: Props) => {
 						This contest has ended!
 					</h2>
 					<div className="my-2">
-						Winner: {winnerLineup.owner} - Attestation:{" "}
-						{winnerLineup.attestationId}
+						Winner:{" "}
+						<Link href={getExplorerUrl(winnerLineup.owner, activeChain)}>
+							{winnerLineup.owner}
+						</Link>
+						&nbsp;- Attestation: {winnerLineup.attestationId}
 					</div>
 					<Link
 						className="text-blue-500 hover:underline"

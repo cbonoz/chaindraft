@@ -230,7 +230,7 @@ export const contestArrayToObject = (
 		closeTime,
 		allowedTeams,
 		owner,
-		lineups: lineupsArr,
+		lineups: lineupsArr as any,
 		passcodeHash,
 	}
 }
