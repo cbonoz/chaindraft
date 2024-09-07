@@ -2,6 +2,7 @@
 import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { siteConfig } from "@/util/site-config"
 import ViewContract from "./view-contract"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
 
 interface Props {
 	showNetwork?: boolean
@@ -19,6 +20,16 @@ const NavFooter = ({ showNetwork }: Props) => {
 				{showNetwork && networkName && (
 					<span className="ml-2"> - Active network: {networkName}</span>
 				)}
+				&nbsp;|&nbsp;
+				<span>
+					<a
+						href="https://github.com/cbonoz/chaindraft"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<GitHubLogoIcon className="h-6 w-6" />
+					</a>
+				</span>
 			</div>
 			<ViewContract />
 		</footer>

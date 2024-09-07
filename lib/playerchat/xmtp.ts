@@ -1,9 +1,8 @@
 import { Client, Conversation, DecodedMessage } from "@xmtp/xmtp-js"
 // Create the client with a `Signer` from your application
 
-type Env = "dev" | "production" | "local"
 const xmtpEnv = process.env.NEXT_PUBLIC_XMTP_ENV || "production"
-const xmtpEnvOption = { env: xmtpEnv as Env }
+const xmtpEnvOption = { env: xmtpEnv as any }
 
 export const createIdentity = async (signer: any) => {
 	const xmtp = await Client.create(signer, xmtpEnvOption)
@@ -37,9 +36,13 @@ export const sendMessage = async (
 export const getMessagesMap = async (
 	signer: any
 ): Promise<Record<string, DecodedMessage<any>[]>> => {
-	const xmtp = await Client.create(signer, xmtpEnvOption)
+	const xmtp = await Client.create(signer, {
+		env: xmtpEnv as any,
+		persistConversations: true,
+	})
 	const peerToMessage: Record<string, DecodedMessage<any>[]> = {}
-	for (const conversation of await xmtp.conversations.list()) {
+	const conversations = await xmtp.conversations.list()
+	for (const conversation of conversations) {
 		// All parameters are optional and can be omitted
 		const opts = {
 			// Show message from the last 7 days

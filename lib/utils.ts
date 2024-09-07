@@ -81,7 +81,7 @@ export const isContestUrl = (url: string) => {
 }
 
 export const isZeroAddress = (address: string | undefined) => {
-	if (isEmpty(address)) {
+	if (!address || isEmpty(address)) {
 		return true
 	}
 	// check if address is only zeroes

@@ -4,6 +4,7 @@ import { getPlayersFromIds } from "@/lib/data/players"
 import { createConversation, sendMessage } from "@/lib/playerchat/xmtp"
 import {
 	abbreviate,
+	getAttestationUrl,
 	getExplorerUrl,
 	getReadableError,
 	isEmpty,
@@ -123,6 +124,20 @@ const DisplayLineup = ({
 						Declare this lineup the winner
 						{loading && <ReloadIcon className="animate-spin ml-1" />}
 					</Button>
+				)}
+
+				{/* show attestation */}
+				{lineup.attestationId && (
+					<span>
+						<Link
+							className="text-blue-500 hover:underline"
+							rel="noopener noreferrer"
+							target="_blank"
+							href={getAttestationUrl(lineup.attestationId)}
+						>
+							Attached attestation
+						</Link>
+					</span>
 				)}
 
 				<div className="flex flex-row gap-2">
