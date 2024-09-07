@@ -7,13 +7,15 @@ Chaindraft
 
 A blockchain-based fantasy draft game with challenge-able contest pages.
 
-Generate your dream lineup for offline contest or sportsbook using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url and attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
-
-Initiate competitions with other draft makers.
+Generate your dream lineup for online contests using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url with an at-submission attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
 
 Chiliz for L1 deployment (public voting and trending players)
 Fhenix for L2 deployment (private voting and security)
 Morph for L2 deployment (settlement and speed)
+
+Try out the demo here: https://chaindraft.vercel.app/
+
+Demo video:
 
 ### Inspiration
 
@@ -28,11 +30,11 @@ Pain points:
 
 - **Blockchain provides a transparent and immutable ledger** for tracking league activities, transactions, and player statistics.
 - **Smart contracts automate league management** tasks, such as scoring, payouts, and rule enforcement, ensuring fairness and consistency.
-- **Decentralized identity verification** ensures that only verified users can participate, preventing fraud and multi-accounting.
+- **Identity verification** ensures that only verified users can participate, preventing fraud and multi-accounting.
 
 ### Technologies Used
 
-- **Web3Auth**: Modal-based authentication. Main form of login for app.
+- **Web3Auth**: Secure modal-based wallet authentication used on all pages. Used as the primary form of login and access control for the ChainDraft app across Chiliz, Fhenix, and Morph.
 - **Sign Protocol**: Ensures the human verifiable claim that the roster was produced randomly. A schema entry and attestation is created for each player draft as proof / evidence of non-tampering between submission and time of contest evaluation.
 - **Chiliz**: A blockchain-based fintech platform that allows fans to buy, trade, and execute voting rights in their favorite sports teams. In the context of BlockFantasy, Chiliz can be used for fan engagement and rewards, offering unique experiences and merchandise. Earn fan tokens for giving votes.
 
@@ -41,12 +43,12 @@ Example contest on Chiliz network:
 
 - **Lit Protocol**: Used for secure and decentralized access control, ensuring that only authorized users can access specific features or data within the app. It can also be used for encrypting sensitive user information. - User Identity / Proof of humanity / KYC at time of submission to avoid bot submissions to contests.
 - **Web3Auth**: Provides a user-friendly interface for users to connect their wallets to the Chaindraft application. Each chain config is embedded and selectable in the app, and authentication state is saved/preserved upon refresh. Providers from each wallet are used to execute transactions for each contest smart contract entry.
-- **Fhenix**: L2 chain used to provide additional security and a      lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
+- **Fhenix**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
 Link to master contract (testnet):
 Example contest on Fhenix network:
 
-- **Morph**: L2 chain used to provide additional security and a      lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
+- **Morph**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
 Link to master Morph contract (testnet):
 Example contest on Morph network:
@@ -66,6 +68,9 @@ Example contest on Morph network:
 - **Integrating with NFT marketplaces** to allow users to buy, sell, and trade fantasy draft-related NFTs. Create an NFT either showcasing your particular random draft or a contest win.
 - **Payment and user model**: Support tracking user performance in contests over time and controlled payouts and incentives for participating in more contests with friends.
 - **Automated verdicts**: NFL does have some lockdown on APIs for fetching conclusions and lineups. Production deployment should use official APIs and authentication keys for doing more automated contest verdicts.
+
+### Screenshots
+
 
 
 ### Useful links
