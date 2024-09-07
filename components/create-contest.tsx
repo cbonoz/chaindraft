@@ -143,7 +143,9 @@ const CreateContest = () => {
 									Go to contest
 								</Button>
 							</div>
-							<div>Share the link to the contest with your friends.</div>
+							<div className="mt-4">
+								Share the link to the contest with your friends and family.
+							</div>
 						</div>
 					)}
 					{!hasResult && (
