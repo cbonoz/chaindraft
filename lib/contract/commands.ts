@@ -7,8 +7,8 @@ import {
 } from "../utils"
 import { ethers } from "ethers"
 import { CONTRACT_ADDRESS_MAP } from "../chains"
-import { ContestMetadata, RequestData } from "../types"
-import { sub } from "date-fns"
+import { ContestMetadata, Player, RequestData } from "../types"
+import { siteConfig } from "@/util/site-config"
 
 export function requireContractAddress(network: string) {
 	const address = requireValue(
@@ -57,21 +57,35 @@ export const createContest = async (
 		submissionCloseDate,
 		allowedTeams
 	)
-	console.log("result", result)
+	console.log("createContest", result)
 	return result
 }
 
-export const submitEntry = async (
+export const submitLineup = async (
 	signer: any,
 	chainId: string,
-	contestId: number,
-	lineup: any,
+	contestId: string,
+	players: Player[],
 	passcode: any
 ) => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
-	const result = await contract.submitLineup(contestId, lineup, passcode || "")
-	console.log("result", result)
+
+	// check for right number of players
+	if (players.length !== siteConfig.numberDraftPlayers) {
+		throw new Error(
+			"Invalid number of players, expected " + siteConfig.numberDraftPlayers
+		)
+	}
+
+	const playerIds = players.map((player) => player.smart_id)
+
+	const result = await contract.submitLineup(
+		contestId,
+		playerIds,
+		passcode || ""
+	)
+	console.log("submitLineup", result)
 	return result
 }
 
@@ -84,7 +98,7 @@ export const setWinner = async (
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
 	const result = await contract.setWinner(contestId, winner)
-	console.log("result", result)
+	console.log("setWinner", result)
 	return result
 }
 
@@ -96,6 +110,6 @@ export const getContestInfo = async (
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
 	const result = await contract.getContestInfo(contestId)
-	console.log("result", contestId, result)
+	console.log("getContestInfo", contestId, result)
 	return contestArrayToObject(contestId, result)
 }

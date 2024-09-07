@@ -7,6 +7,7 @@ contract DraftContract {
         string[5] playerIds;  // A lineup consists of 5 player IDs
         bool isSubmitted;     // Track if the lineup is submitted
         uint submissionTime;  // Timestamp when the lineup was submitted
+        address owner;        // Owner of the lineup
     }
 
     // Define a contest structure
@@ -14,8 +15,7 @@ contract DraftContract {
         string name;
         uint entryFee;
         uint prizePool;
-        address[] participants;
-        mapping(address => Lineup) lineups;
+        Lineup[] lineups;
         bool isActive;
         address winner;
         string allowedTeams;   // List of allowed teams for the contest
@@ -67,14 +67,6 @@ contract DraftContract {
         Contest storage contest = contests[_contestId];
         require(contest.isActive, "Contest is not active");
         require(block.timestamp <= contest.closeTime, "Submission period has ended");
-        require(!contest.lineups[msg.sender].isSubmitted, "Lineup already submitted");
-
-        // If the contest has an entry fee, check that the correct amount is sent
-        if (contest.entryFee > 0) {
-            require(msg.value == contest.entryFee, "Incorrect entry fee");
-        } else {
-            require(msg.value == 0, "No entry fee required for this contest");
-        }
 
         // Check passcode if it is set
         if (contest.passcodeHash != bytes32(0)) {
@@ -84,18 +76,24 @@ contract DraftContract {
             );
         }
 
-        // Add the sender to the participants list
-        contest.participants.push(msg.sender);
-
-        // Save the lineup and record the submission time
-        Lineup storage lineup = contest.lineups[msg.sender];
-        lineup.isSubmitted = true;
-        lineup.submissionTime = block.timestamp; // Record lineup submission time
-
-        // Copy each player ID individually
-        for (uint i = 0; i < _playerIds.length; i++) {
-            lineup.playerIds[i] = _playerIds[i];
+        // check if already participant
+        for (uint i = 0; i < contest.lineups.length; i++) {
+            require(contest.lineups[i].owner != msg.sender, "Already participant");
         }
+
+        if (contest.entryFee > 0) {
+            require(msg.value == contest.entryFee, "Incorrect entry fee");
+        } else {
+            require(msg.value == 0, "No entry fee required for this contest");
+        }
+
+// push the lineup to the contest
+        contest.lineups.push(Lineup({
+            playerIds: _playerIds,
+            isSubmitted: true,
+            submissionTime: block.timestamp,
+            owner: msg.sender
+        }));
 
         // Increase the prize pool if there's an entry fee
         if (contest.entryFee > 0) {
@@ -123,8 +121,8 @@ contract DraftContract {
     // Check if an address is a participant in a contest
     function isParticipant(uint _contestId, address _address) internal view returns (bool) {
         Contest storage contest = contests[_contestId];
-        for (uint i = 0; i < contest.participants.length; i++) {
-            if (contest.participants[i] == _address) {
+        for (uint i = 0; i < contest.lineups.length; i++) {
+            if (contest.lineups[i].owner == _address) {
                 return true;
             }
         }
@@ -142,7 +140,7 @@ contract DraftContract {
         uint closeTime,
         string memory allowedTeams,
         address owner,
-        address[] memory participants
+        Lineup[] memory lineups
     ) {
         Contest storage contest = contests[_contestId];
         name = contest.name;
@@ -154,20 +152,37 @@ contract DraftContract {
         closeTime = contest.closeTime;
         allowedTeams = contest.allowedTeams;
         owner = contest.owner;
-        participants = contest.participants;
+        // Return all lineups if owner else return only the player's lineup
+        if (msg.sender == contest.owner) {
+            lineups = contest.lineups;
+        } else {
+            for (uint i = 0; i < contest.lineups.length; i++) {
+                if (contest.lineups[i].owner == msg.sender) {
+                    lineups = new Lineup[](1);
+                    lineups[0] = contest.lineups[i];
+                    break;
+                }
+            }
+        }
     }
 
     // Get a list of participants for a contest
-    function getParticipants(uint _contestId) public view returns (address[] memory) {
+    function getParticipants(uint _contestId) public view returns (Lineup[] memory) {
         Contest storage contest = contests[_contestId];
-        return contest.participants;
+        return contest.lineups;
     }
 
     // Get a player's lineup
     function getLineup(uint _contestId, address _player) public view returns (string[5] memory playerIds, bool isSubmitted, uint submissionTime) {
-        Lineup storage lineup = contests[_contestId].lineups[_player];
-        playerIds = lineup.playerIds;
-        isSubmitted = lineup.isSubmitted;
-        submissionTime = lineup.submissionTime;
+        Contest storage contest = contests[_contestId];
+        for (uint i = 0; i < contest.lineups.length; i++) {
+            if (contest.lineups[i].owner == _player) {
+                Lineup storage lineup = contest.lineups[i];
+                playerIds = lineup.playerIds;
+                isSubmitted = lineup.isSubmitted;
+                submissionTime = lineup.submissionTime;
+                break;
+            }
+        }
     }
 }

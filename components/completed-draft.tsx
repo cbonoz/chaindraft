@@ -8,37 +8,63 @@ import { POSITIONS } from "@/lib/constants"
 import { Button } from "./ui/button"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import ReactSignatureCanvas from "react-signature-canvas"
+import { useWeb3AuthContext } from "@/context/Web3AuthContext"
+import { submitLineup } from "@/lib/contract/commands"
+import { getReadableError } from "@/lib/utils"
 
 interface Props {
 	draftedPlayers: Record<string, Player | null>
 	reset: () => void
 	contestId: string
+	passcodeHash?: string
 }
 
-const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
+const CompletedDraft = ({
+	draftedPlayers,
+	reset,
+	contestId,
+	passcodeHash,
+}: Props) => {
 	const [loading, setLoading] = useState(false)
+	const [passcode, setPasscode] = useState("")
 	const [result, setResult] = useState<any>(null)
+	const [error, setError] = useState<any>(null)
 	const ref = React.useRef<any>()
+	const { signer, activeChain } = useWeb3AuthContext()
 
 	const players = Object.values(draftedPlayers).filter(
 		(player) => player !== null
 	)
 
+	const chainId = activeChain?.chainId
+
 	async function onSubmit() {
 		console.log("Draft submitted", contestId, draftedPlayers)
+		if (!signer || !chainId) {
+			setError(
+				"No signer or chainId - try refreshing the page or logging back in"
+			)
+			return
+		}
+		setLoading(true)
 		try {
-			setLoading(true)
-			// await submitDraft(contestId, draftedPlayers)
+			const players = Object.values(draftedPlayers).filter(
+				(player) => player !== null
+			)
+			await submitLineup(
+				signer,
+				activeChain?.chainId,
+				contestId,
+				players,
+				passcode
+			)
 			setResult({
 				success: true,
 				message: "Draft submitted successfully!",
 			})
 		} catch (err: any) {
 			console.error(err)
-			setResult({
-				success: false,
-				message: "Error submitting draft",
-			})
+			setError(getReadableError(err))
 		} finally {
 			setLoading(false)
 		}
@@ -76,8 +102,8 @@ const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
 					disabled={loading}
 					className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded"
 				>
-					{loading && <ReloadIcon className="animate-spin" />}
 					Submit Draft
+					{loading && <ReloadIcon className="animate-spin ml-1" />}
 				</Button>
 			</div>
 			<div>
@@ -89,6 +115,7 @@ const CompletedDraft = ({ draftedPlayers, reset, contestId }: Props) => {
 					Reset Draft
 				</Button>
 			</div>
+			{error && <div className="text-red-500 mt-4">{error}</div>}
 		</div>
 	)
 }

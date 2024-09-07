@@ -119,6 +119,7 @@ const PlayerDraft = ({ contestId }: Props) => {
 				{/* Right Column: Player Drafting */}
 				<div className="grid col-span-9">
 					<div className="mb-4">
+						{/* TODO: replace with bars that diminish as skips are used */}
 						Skips Left:&nbsp;
 						<span
 							className={classNames("font-semibold", {
