@@ -5,7 +5,7 @@
 Chaindraft
 ---
 
-A blockchain-based NFL draft consumer app using random player draws, user-determined skips, and smart contract stored fantasy contest pages.
+A blockchain-based NFL draft consumer app using randomized player draws, user-determined skips, and smart contract stored contest pages.
 
 Generate your dream lineup for online contests using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url with an at-submission attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
 
