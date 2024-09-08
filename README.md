@@ -5,7 +5,7 @@
 Chaindraft
 ---
 
-A blockchain-based fantasy draft consumer app with challenge-able contest pages.
+A blockchain-based NFL draft consumer app using random player draws, user-determined skips, and smart contract stored fantasy contest pages.
 
 Generate your dream lineup for online contests using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url with an at-submission attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
 
@@ -16,6 +16,8 @@ Generate your dream lineup for online contests using the app with lineups tracke
 Try out the demo here: https://chaindraft.vercel.app/
 
 Demo video:
+
+Built for EthGlobal Online 2024
 
 ### Inspiration
 
@@ -71,9 +73,63 @@ Main messaging page (tracks received messages): https://chaindraft.vercel.app/me
 
 ### Screenshots
 
+## Screenshots
 
+<div align="center">
+
+### Home
+<img src="img/home.png" alt="Home" width="600">
+
+### Chiliz Contract
+<img src="img/chiliz_contract.png" alt="Chiliz Contract" width="600">
+
+### Chiliz Create
+<img src="img/chiliz_create.png" alt="Chiliz Create" width="600">
+
+### Morph Deploy
+<img src="img/morph_deploy.png" alt="Morph Deploy" width="600">
+
+### Fhenix Contract
+<img src="img/fhenix_contract.png" alt="Fhenix Contract" width="600">
+
+
+### Create New Contest
+<img src="img/create_new_contest.png" alt="Create New Contest" width="600">
+
+### Contest Receipt
+<img src="img/contest_receipt.png" alt="Contest Receipt" width="600">
+
+### Contest Created
+<img src="img/contest_created.png" alt="Contest Created" width="600">
+
+### Drafting a new lineup
+<img src="img/draft.png" alt="Draft" width="600">
+
+### Submit Lineup
+<img src="img/submit_lineup.png" alt="Submit Lineup" width="600">
+
+### Every lineup submission generates a signature and saved attestation
+<img src="img/attest.png" alt="Attest" width="600">
+
+### Winner
+<img src="img/winner.png" alt="Winner" width="600">
+
+### Set Winner
+<img src="img/set_winner.png" alt="Set Winner" width="600">
+
+### Submissions closed (waiting for verdict)
+<img src="img/closed.png" alt="Closed" width="600">
+
+
+### XMTP Conversations
+<img src="img/xmtp_conversations.png" alt="XMTP Conversations" width="600">
+
+### XMTP Sent messages
+<img src="img/xmtp_sent.png" alt="XMTP Sent" width="600">
+
+### Contract Events
+<img src="img/contract_events.png" alt="Contract Events" width="600">
 
 ### Useful links
 * https://github.com/nflverse/nflverse-data/releases/tag/players
 * https://github.com/Web3Auth/web3auth-web
-* https://github.com/textileio/demo-basin-server
