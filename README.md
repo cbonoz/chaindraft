@@ -1,5 +1,5 @@
 <p align='center'>
-  <img src="./public/logo.png" width=600 />
+  <img src="https://i.ibb.co/55mV1PB/logo.png" width=600 />
 </p>
 
 Chaindraft
