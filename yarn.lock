@@ -2236,6 +2236,11 @@
     rxjs "^7.8.0"
     undici "^5.8.1"
 
+"@xmtp/user-preferences-bindings-wasm@0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@xmtp/user-preferences-bindings-wasm/-/user-preferences-bindings-wasm-0.3.5.tgz#89a366dae35b2532e865af5a1ff40d3f60680772"
+  integrity sha512-6zfUbjEs7yRwPkYUo9JjxcI3AGg8HIGvb+2DiLgZU+dDj3BTKoL+N3+oXA649zH2PF5k+EJ8kCz2n9uuJwT7mA==
+
 "@xmtp/user-preferences-bindings-wasm@^0.3.6":
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/@xmtp/user-preferences-bindings-wasm/-/user-preferences-bindings-wasm-0.3.6.tgz#4ca58dca940574483caa8cbd4d9c609577b1e0f1"

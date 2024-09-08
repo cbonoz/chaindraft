@@ -1,4 +1,11 @@
-import ConversationList from "@/components/conversation-list"
+import dynamic from "next/dynamic"
+
+const ConversationList = dynamic(
+	() => import("@/components/conversation-list"),
+	{
+		ssr: false,
+	}
+)
 
 const MessagesPage = () => {
 	return (
