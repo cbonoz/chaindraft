@@ -20,16 +20,20 @@ const NavFooter = ({ showNetwork }: Props) => {
 				{showNetwork && networkName && (
 					<span className="ml-2"> - Active network: {networkName}</span>
 				)}
-				&nbsp;|&nbsp;
-				<span>
-					<a
-						href="https://github.com/cbonoz/chaindraft"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<GitHubLogoIcon className="h-6 w-6" />
-					</a>
-				</span>
+				{false && (
+					<span>
+						&nbsp;|&nbsp;
+						<span>
+							<a
+								href="https://github.com/cbonoz/chaindraft"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<GitHubLogoIcon className="h-6 w-6" />
+							</a>
+						</span>
+					</span>
+				)}
 			</div>
 			<ViewContract />
 		</footer>

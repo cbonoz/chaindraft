@@ -104,7 +104,7 @@ const CompletedDraft = ({
 				width={200}
 				height={100}
 			/> */}
-			<div className="text-green-500 text-2xl font-bold">Nice draft!</div>
+			<div className="text-green-500 text-2xl font-bold mt-4">Nice draft!</div>
 			<div className="flex flex-row gap-4 max-w-[1200px]">
 				{players.map((player, index) => (
 					<div className="gap-4">

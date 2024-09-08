@@ -1,7 +1,6 @@
 "use client"
 
 import { RouteButtons } from "@/components/route-buttons"
-import { ACTIVE_PLAYERS_WITH_HEADSHOTS } from "@/lib/data/players"
 import { siteConfig } from "@/util/site-config"
 import { useState } from "react"
 
@@ -16,7 +15,6 @@ export default function Home() {
 	}
 
 	const [playerIndex, setPlayerIndex] = useState(0)
-	const activePlayer = ACTIVE_PLAYERS_WITH_HEADSHOTS[playerIndex]
 	return (
 		<main className="flex min-h-screen flex-col p-24">
 			{/* <h1 className="text-4xl font-bold">Welcome to chaindraft</h1> */}

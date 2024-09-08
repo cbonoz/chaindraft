@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { Chain } from "viem"
 import { CustomChainConfig } from "@web3auth/base"
 import { BigNumberish, ContractTransactionReceipt, ethers } from "ethers"
-import { ContestMetadata } from "./types"
+import { ContestMetadata, Lineup } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -222,7 +222,7 @@ export const contestArrayToObject = (
 			attestationId,
 		}
 	})
-
+	const teamArr = allowedTeams.split(",").map((team: string) => team.trim())
 	return {
 		id: contestId,
 		name,
@@ -232,9 +232,9 @@ export const contestArrayToObject = (
 		winner,
 		creationTime,
 		closeTime,
-		allowedTeams,
+		allowedTeams: teamArr,
 		owner,
-		lineups: lineupsArr as any,
+		lineups: lineupsArr as Lineup[],
 		passcodeHash,
 	}
 }

@@ -3,7 +3,7 @@ import Image from "next/image"
 import { ContestMetadata, Player } from "@/lib/types"
 import { GROUPED_PLAYERS } from "@/lib/data/players"
 import { Button } from "@/components/ui/button"
-import { shuffleArray } from "@/lib/utils"
+import { isEmpty, shuffleArray } from "@/lib/utils"
 import { siteConfig } from "@/util/site-config"
 import CompletedDraft from "./completed-draft"
 import PlayerCard from "./player-card"
@@ -30,7 +30,12 @@ const PlayerDraft = ({ contestId, contestData }: Props) => {
 
 	// Generate the list of available players based on the current position
 	const getAvailablePlayers = () => {
-		const allPlayers = Object.values(GROUPED_PLAYERS).flat()
+		let allPlayers: Player[] = Object.values(GROUPED_PLAYERS).flat()
+		if (!isEmpty(contestData.allowedTeams)) {
+			allPlayers = allPlayers.filter((player) =>
+				contestData.allowedTeams.includes(player.team_abbr)
+			)
+		}
 		return shuffleArray(allPlayers).filter(
 			(player) =>
 				player.position === currentPosition ||
@@ -83,7 +88,7 @@ const PlayerDraft = ({ contestId, contestData }: Props) => {
 			<div>Contest is open</div>
 			<Progress
 				value={(currentIndex / siteConfig.numberDraftPlayers) * 100}
-				className="mb-8"
+				className="mb-8 mt-2"
 			/>
 
 			<div className="grid grid-cols-12 gap-8 w-full ">
@@ -165,6 +170,11 @@ const PlayerDraft = ({ contestId, contestData }: Props) => {
 					)}
 				</div>
 			</div>
+			{!isEmpty(contestData.allowedTeams) && (
+				<div className="mt-8 text-sm italics">
+					Enabled teams: {contestData.allowedTeams.join(", ")}
+				</div>
+			)}
 		</div>
 	)
 }

@@ -1,5 +1,10 @@
 import { APP_CONTRACT } from "./metadata"
-import { contestArrayToObject, dateToMillis, requireValue } from "../utils"
+import {
+	contestArrayToObject,
+	dateToMillis,
+	isEmpty,
+	requireValue,
+} from "../utils"
 import { ethers } from "ethers"
 import { CHAIN_OPTIONS, CONTRACT_ADDRESS_MAP } from "../chains"
 import { ContestMetadata, Player, RequestData } from "../types"
@@ -44,10 +49,11 @@ export const createContest = async (
 
 	let allowedTeams = ""
 
-	if (data.allowedTeams) {
-		allowedTeams = data.allowedTeams.join(",")
+	if (!isEmpty(data.allowedTeams)) {
+		allowedTeams = (data.allowedTeams || []).map((team) => team.value).join(",")
 	}
 
+	console.log("create contest", data, allowedTeams)
 	const result = await contract.createContest(
 		data.name,
 		data.entryFee,
@@ -57,7 +63,6 @@ export const createContest = async (
 	)
 	// Wait for the transaction to be mined
 	const receipt = await result.wait()
-
 	console.log("Create contest receipt:", receipt) // Assuming it's a BigNumber
 	return receipt
 }

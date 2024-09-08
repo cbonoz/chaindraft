@@ -1,9 +1,11 @@
+import { Option } from '@/components/ui/multi-selector'
+
 export interface RequestData {
 	entryFee?: number
 	name?: string
 	closeDateMillis?: number
 	passcode?: string
-	allowedTeams?: string[]
+	allowedTeams?: Option[]
 }
 
 export interface SchemaItem {

@@ -29,9 +29,11 @@ import { useWeb3AuthContext } from "@/context/Web3AuthContext"
 import { createContest } from "@/lib/contract/commands"
 import { CHAIN_OPTIONS } from "@/lib/chains"
 import RenderObject from "./render-object"
+import MultipleSelector from "./ui/multi-selector"
+import { ALL_TEAMS, TEAM_OPTIONS } from "@/lib/data/players"
 
 const CreateContest = () => {
-	const [data, setData] = useState<RequestData>({})
+	const [data, setData] = useState<RequestData>({ allowedTeams: [] })
 	const [result, setResult] = useState({} as any)
 	const [modalData, setModalData] = useState({} as any)
 	const [loading, setLoading] = useState(false)
@@ -201,6 +203,23 @@ const CreateContest = () => {
 										/>
 									</PopoverContent>
 								</Popover>
+							</div>
+
+							{/* teams */}
+							<div className="w-full mt-4">
+								<MultipleSelector
+									value={data.allowedTeams}
+									onChange={(allowedTeams) =>
+										setData({ ...data, allowedTeams })
+									}
+									defaultOptions={TEAM_OPTIONS}
+									placeholder="Select teams for draft if blank all enabled (ex: season long)"
+									emptyIndicator={
+										<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+											No results found.
+										</p>
+									}
+								/>
 							</div>
 
 							{/* passcode */}
