@@ -122,7 +122,7 @@ Main messaging page (tracks received messages): https://chaindraft.vercel.app/me
 <img src="img/winner.png" alt="Winner" width="600">
 
 ### XMTP Conversations initiated from other contest players
-<img src="img/xmtp_conversations.png" alt="XMTP Conversations" width="600">
+<img src="img/xmtp_messages.png" alt="XMTP Conversations" width="600">
 
 ### XMTP Sent messages
 <img src="img/xmtp_sent.png" alt="XMTP Sent" width="600">
