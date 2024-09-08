@@ -5,7 +5,7 @@
 Chaindraft
 ---
 
-A blockchain-based fantasy draft game with challenge-able contest pages.
+A blockchain-based fantasy draft consumer app with challenge-able contest pages.
 
 Generate your dream lineup for online contests using the app with lineups tracked on smart contracts. Keep your lineup as a shareable url with an at-submission attestation proving you drafted a given roster and at what time. Challenge other players in contests that are either free to play or with fee for entry.
 

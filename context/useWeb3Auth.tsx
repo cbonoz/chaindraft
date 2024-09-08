@@ -6,12 +6,10 @@ import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base"
 import { WALLET_ADAPTERS } from "@web3auth/base"
 
 import { ethers } from "ethers"
-import Error from "next/error"
 import { NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID } from "@/lib/constants"
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
 import { CHAIN_OPTIONS } from "@/lib/chains"
 import { CustomChainConfig } from "@web3auth/base"
-
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
 import { MetamaskAdapter } from "@web3auth/metamask-adapter"
 import { isEmpty } from "@/lib/utils"
 const PREVIOUSLY_CONNECTED_KEY = "previouslyConnected"

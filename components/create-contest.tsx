@@ -176,7 +176,7 @@ const CreateContest = () => {
 								<Popover>
 									<PopoverTrigger asChild>
 										<Button
-											variant={"outline"}
+											variant="ghost"
 											className={cn(
 												"w-[280px] justify-start text-left font-normal",
 												!data.closeDateMillis && "text-muted-foreground"
@@ -194,12 +194,12 @@ const CreateContest = () => {
 										<Calendar
 											mode="single"
 											selected={new Date(data.closeDateMillis || Date.now())}
-											onSelect={(date) =>
+											onSelect={(date: any) =>
 												handleChange({
 													target: { name: "closeDateMillis", value: date },
 												} as any)
 											}
-											initialFocus
+											// initialFocus
 										/>
 									</PopoverContent>
 								</Popover>
