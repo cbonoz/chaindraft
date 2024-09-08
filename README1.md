@@ -34,15 +34,14 @@ Pain points:
 
 ### Technologies Used
 
-- **Web3Auth**: Secure modal-based wallet authentication used on all pages. Used as the primary form of login and access control for the ChainDraft app across Chiliz, Fhenix, and Morph.
+- **Web3Auth**: Provides a user-friendly interface for users to connect their wallets to the Chaindraft application. Each chain config is embedded and selectable in the app, and authentication state is saved/preserved upon refresh. Providers from each wallet are used to execute transactions for each contest smart contract entry. Used as the primary form of login and access control for the ChainDraft app across Chiliz, Fhenix, and Morph cross chain contract interactions.
 - **Sign Protocol**: Ensures the human verifiable claim that the roster was produced randomly. A schema entry and attestation is created for each player draft as proof / evidence of non-tampering between submission and time of contest evaluation.
 - **Chiliz**: A blockchain-based fintech platform that allows fans to buy, trade, and execute voting rights in their favorite sports teams. In the context of BlockFantasy, Chiliz can be used for fan engagement and rewards, offering unique experiences and merchandise. Earn fan tokens for giving votes.
 
-Link to master contract (testnet):
+Link to master contract (testnet): https://testnet.chiliscan.com/address/0x75cFA6a80531a005E7a2144318cED954CDA10113
 Example contest on Chiliz network: https://chaindraft.vercel.app/contest/1
 
-- **Lit Protocol**: Used for secure and decentralized access control, ensuring that only authorized users can access specific features or data within the app. It can also be used for encrypting sensitive user information. - User Identity / Proof of humanity / KYC at time of submission to avoid bot submissions to contests.
-- **Web3Auth**: Provides a user-friendly interface for users to connect their wallets to the Chaindraft application. Each chain config is embedded and selectable in the app, and authentication state is saved/preserved upon refresh. Providers from each wallet are used to execute transactions for each contest smart contract entry.
+
 - **Fhenix**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
 Link to master contract (testnet): https://explorer.helium.fhenix.zone/address/0x6C97D08dc8F0b911A171AbdF9612CB78135197b6
@@ -50,7 +49,7 @@ Example contest on Fhenix network: https://chaindraft.vercel.app/contest/1
 
 - **Morph**: L2 chain used to provide additional security and a lower cost option for submission and contract interactions for each contest. Payouts and withdraws from contests.
 
-Link to master Morph contract (testnet):
+Link to master Morph contract (testnet): https://explorer-holesky.morphl2.io/address/0x973Ec243E24Bf62b56b0F338dd2704371DD5B2db
 Example contest on Morph network: https://chaindraft.vercel.app/contest/1
 
 - **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. After a contest starts and XMTP Chat becomes available on the contest page for users to discuss live - including the outcome. A unique chat is automatically created for each contest.

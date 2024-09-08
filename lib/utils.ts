@@ -222,7 +222,9 @@ export const contestArrayToObject = (
 			attestationId,
 		}
 	})
-	const teamArr = allowedTeams.split(",").map((team: string) => team.trim())
+	const teamArr = !isEmpty(allowedTeams)
+		? allowedTeams.split(",").map((team: string) => team.trim())
+		: []
 	return {
 		id: contestId,
 		name,

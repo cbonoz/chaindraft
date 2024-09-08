@@ -18,7 +18,7 @@ export const CHILIZ_TESTNET: CustomChainConfig = {
 	chainNamespace: CHAIN_NAMESPACES.EIP155,
 	chainId: "0x15b32",
 	rpcTarget: "https://spicy-rpc.chiliz.com",
-	displayName: "Chiliz Testnet",
+	displayName: "Chiliz Spicy Testnet",
 	blockExplorerUrl: "https://testnet.chiliscan.com",
 	ticker: "CHZ",
 	tickerName: "CHZ",
@@ -27,12 +27,12 @@ export const CHILIZ_TESTNET: CustomChainConfig = {
 
 export const MORPH_TESTNET: CustomChainConfig = {
 	chainNamespace: CHAIN_NAMESPACES.EIP155,
-	chainId: "0xa96",
-	rpcTarget: "https://rpc-testnet.morphl2.io",
+	chainId: "0xAFA",
+	rpcTarget: "https://rpc-quicknode-holesky.morphl2.io",
 	displayName: "Morph Testnet",
-	blockExplorerUrl: "https://testnet.morphscan.io",
-	ticker: "MORPH",
-	tickerName: "MORPH",
+	blockExplorerUrl: "https://explorer-holesky.morphl2.io",
+	ticker: "ETH",
+	tickerName: "ETH",
 	logo: "https://morph.ghost.io/content/images/2024/05/Logo--Morph-Green-.png",
 }
 
