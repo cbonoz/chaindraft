@@ -52,8 +52,9 @@ Example contest on Fhenix network: https://chaindraft.vercel.app/contest/1
 Link to master Morph contract (testnet): https://explorer-holesky.morphl2.io/address/0x973Ec243E24Bf62b56b0F338dd2704371DD5B2db
 Example contest on Morph network: https://chaindraft.vercel.app/contest/1
 
-- **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. After a contest starts and XMTP Chat becomes available on the contest page for users to discuss live - including the outcome. A unique chat is automatically created for each contest.
-<!-- - **Tableland/Basin**: Upload new images via s3 -->
+- **XMTP (Extensible Message Transport Protocol)**: Enables secure, decentralized messaging within the app. After a contest starts and XMTP Chat becomes available on the contest page for users to discuss live - including the outcome. A unique chat is automatically created for each contest. Players are able to message and chat with other players after the contest has started.
+
+https://chaindraft.vercel.app/messages
 
 ### Challenges
 
