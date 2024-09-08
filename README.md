@@ -111,17 +111,17 @@ Main messaging page (tracks received messages): https://chaindraft.vercel.app/me
 ### Every lineup submission generates a signature and saved attestation
 <img src="img/attest.png" alt="Attest" width="600">
 
-### Winner
-<img src="img/winner.png" alt="Winner" width="600">
-
-### Set Winner
-<img src="img/set_winner.png" alt="Set Winner" width="600">
 
 ### Submissions closed (waiting for verdict)
 <img src="img/closed.png" alt="Closed" width="600">
 
+### Set Winner
+<img src="img/set_winner.png" alt="Set Winner" width="600">
 
-### XMTP Conversations
+### Winner
+<img src="img/winner.png" alt="Winner" width="600">
+
+### XMTP Conversations initiated from other contest players
 <img src="img/xmtp_conversations.png" alt="XMTP Conversations" width="600">
 
 ### XMTP Sent messages
