@@ -15,7 +15,7 @@ Generate your dream lineup for online contests using the app with lineups tracke
 
 Try out the demo here: https://chaindraft.vercel.app/
 
-Demo video:
+Demo video: https://youtu.be/FflBUV7mr6g
 
 Built for EthGlobal Online 2024
 
