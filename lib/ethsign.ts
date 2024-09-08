@@ -55,7 +55,6 @@ export const createSchema = async (signer?: any) => {
 	return { schemaId: schemaInfo.schemaId, data: JSON.stringify(data), title }
 }
 // https://docs.sign.global/developer-apis/index/api
-// https://docs.sign.global/developer-apis/index-1/npm-sdk#off-chain-arweave-mode
 export const createAttestation = async (signer: any, data: SchemaEntry) => {
 	const client = getClient(signer)
 	//create attestation
