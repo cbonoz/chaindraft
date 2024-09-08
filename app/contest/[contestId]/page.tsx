@@ -130,7 +130,7 @@ export default function ContestPage({ params }: { params: Params }) {
 						<div className="mt-2">
 							Contest start date: {formatDate(Number(data?.closeTime), true)}
 						</div>
-						{entryFee > 0 && (
+						{Number(entryFee || 0) > 0 && (
 							<div>
 								Entry fee: {entryFee} {currentChain?.ticker}
 							</div>
