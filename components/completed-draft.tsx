@@ -118,7 +118,7 @@ const CompletedDraft = ({
 				))}
 			</div>
 			<div className="my-4 border w-[325px] p-1">
-				<div className="text-med font-bold">Sign here</div>
+				<div className="text-med font-bold">Sign here for verification</div>
 				<ReactSignatureCanvas ref={ref} />
 			</div>
 			{!isZeroAddress(contestData?.passcodeHash) && (

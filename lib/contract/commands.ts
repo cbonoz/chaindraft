@@ -102,7 +102,7 @@ export const submitLineup = async (
 		{ value: entryEth }
 	)
 
-	console.log("submitLineup", result)
+	console.log("submitLineup", entryEth, result)
 
 	// await
 	await result.wait()

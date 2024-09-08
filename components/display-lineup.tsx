@@ -113,18 +113,6 @@ const DisplayLineup = ({
 						</span>
 					</p>
 				)}
-				{/* show declare winner button */}
-				{showDeclareWinner && (
-					<Button
-						variant={"link"}
-						onClick={declareWinner}
-						disabled={loading}
-						// className="underline"
-					>
-						Declare this lineup the winner
-						{loading && <ReloadIcon className="animate-spin ml-1" />}
-					</Button>
-				)}
 
 				{/* show attestation */}
 				{lineup.attestationId && (
@@ -138,6 +126,19 @@ const DisplayLineup = ({
 							Attached attestation
 						</Link>
 					</span>
+				)}
+
+				{/* show declare winner button */}
+				{showDeclareWinner && (
+					<Button
+						variant={"link"}
+						onClick={declareWinner}
+						disabled={loading}
+						// className="font-bold underline"
+					>
+						Declare this lineup the winner
+						{loading && <ReloadIcon className="animate-spin ml-1" />}
+					</Button>
 				)}
 
 				<div className="flex flex-row gap-2">

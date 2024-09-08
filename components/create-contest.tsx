@@ -164,7 +164,7 @@ const CreateContest = () => {
 							{/* prize */}
 							<Input
 								className="mt-4"
-								placeholder={`Enter entry fee in ${activeChain?.tickerName || "ETH"}`}
+								placeholder={`Enter entry fee in ${activeChain?.tickerName || "ETH"}. Use 0 for free entry.`}
 								name="entryFee"
 								value={data.entryFee}
 								onChange={handleChange}
@@ -224,7 +224,7 @@ const CreateContest = () => {
 
 							{/* passcode */}
 							<Input
-								placeholder="Enter contest passcode (optional)"
+								placeholder="Add contest passcode (optional)"
 								name="passcode"
 								className="mt-4"
 								value={data.passcode}

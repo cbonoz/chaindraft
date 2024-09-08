@@ -94,7 +94,7 @@ export default function ContestPage({ params }: { params: Params }) {
 				</span>
 			)
 		} else if (showDraft) {
-			return `Draft your lineup for ${contestName}`
+			return `Draft your lineup for: ${contestName}`
 		} else if (showLineups) {
 			return `Lineups for ${contestName}`
 		}
