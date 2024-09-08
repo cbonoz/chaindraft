@@ -53,10 +53,14 @@ export const createContest = async (
 		allowedTeams = (data.allowedTeams || []).map((team) => team.value).join(",")
 	}
 
+	const fee = data.entryFee || 0
+	// convert to wei
+	const entryEth = ethers.parseEther(fee.toString())
+
 	console.log("create contest", data, allowedTeams)
 	const result = await contract.createContest(
 		data.name,
-		data.entryFee,
+		entryEth,
 		data.passcode || "",
 		submissionCloseDate,
 		allowedTeams
@@ -73,7 +77,8 @@ export const submitLineup = async (
 	contestId: string,
 	players: Player[],
 	passcode: any,
-	attestationId: string
+	attestationId: string,
+	entryFee: number
 ) => {
 	const address = requireContractAddress(chainId)
 	const contract = new ethers.Contract(address, APP_CONTRACT.abi, signer)
@@ -87,11 +92,14 @@ export const submitLineup = async (
 
 	const playerIds = players.map((player) => player.smart_id)
 
+	const entryEth = entryFee
+
 	const result = await contract.submitLineup(
 		contestId,
 		playerIds,
 		passcode || "",
-		attestationId
+		attestationId,
+		{ value: entryEth }
 	)
 
 	console.log("submitLineup", result)

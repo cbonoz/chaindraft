@@ -15,6 +15,7 @@ import {
 	isParticipant,
 } from "@/lib/utils"
 import { AlertCircle } from "lucide-react"
+import { ethers } from "ethers"
 
 interface Params {
 	contestId: string
@@ -100,6 +101,8 @@ export default function ContestPage({ params }: { params: Params }) {
 		return contestName
 	}
 
+	const entryFee = ethers.formatEther(ethers.getBigInt(data?.entryFee || 0))
+
 	return (
 		// center align
 		<div className="flex flex-col items-center justify-center m-8 px-4">
@@ -127,6 +130,11 @@ export default function ContestPage({ params }: { params: Params }) {
 						<div className="mt-2">
 							Contest start date: {formatDate(Number(data?.closeTime), true)}
 						</div>
+						{entryFee > 0 && (
+							<div>
+								Entry fee: {entryFee} {currentChain?.ticker}
+							</div>
+						)}
 					</div>
 				)}
 

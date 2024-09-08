@@ -81,7 +81,8 @@ const CompletedDraft = ({
 				contestId,
 				players,
 				passcode,
-				attestation.attestationId
+				attestation.attestationId,
+				contestData.entryFee || 0
 			)
 			setResult({
 				success: true,
